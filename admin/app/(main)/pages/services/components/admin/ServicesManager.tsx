@@ -75,10 +75,10 @@ export function ServicesManager() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editingService) {
-      setServices(services.map(s => 
-        s.service_id === editingService.service_id 
+      setServices(services.map(s =>
+        s.service_id === editingService.service_id
           ? { ...s, ...formData }
           : s
       ));
@@ -90,7 +90,7 @@ export function ServicesManager() {
       };
       setServices([...services, newService]);
     }
-    
+
     setIsDialogOpen(false);
   };
 
@@ -130,6 +130,7 @@ export function ServicesManager() {
         <Button
           icon="pi pi-trash"
           className="p-button-sm p-button-outlined p-button-danger"
+          style={{ marginLeft: 10 }}
           onClick={() => handleDelete(rowData)}
         />
       </div>
@@ -155,9 +156,9 @@ export function ServicesManager() {
   return (
     <div className="space-y-6">
       <ConfirmDialog />
-      
-      <div className="manager-header">
-        <h3>{t('services.list')}</h3>
+
+      <div className="manager-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ justifyContent: 'center', alignItems: 'center', marginTop: 'auto', marginBottom: 'auto' }}>{t('services.list')}</h3>
         <Button
           label={t('services.add')}
           icon="pi pi-plus"
@@ -165,7 +166,7 @@ export function ServicesManager() {
         />
       </div>
 
-      <DataTable value={services} stripedRows tableStyle={{ minWidth: '50rem' }}>
+      <DataTable value={services} stripedRows tableStyle={{ minWidth: '50rem', marginTop: 10 }}>
         <Column field="service_id" header={t('common.id')} sortable style={{ width: '10%' }} />
         <Column body={nameBodyTemplate} header={t('services.name')} sortable style={{ width: '20%' }} />
         <Column body={descriptionBodyTemplate} header={t('services.description')} style={{ width: '30%' }} />
@@ -175,6 +176,380 @@ export function ServicesManager() {
       </DataTable>
 
       <Dialog
+        header={editingService ? t('services.edit') : t('services.addNew')}
+        visible={isDialogOpen}
+        style={{
+          width: '600px',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          borderRadius: '0.375rem',
+        }}
+        footer={dialogFooter}
+        onHide={() => setIsDialogOpen(false)}
+        modal
+        className="p-fluid"
+      >
+        <form onSubmit={handleSubmit} style={{ padding: '1.5rem' }}>
+          <div className="grid" >
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="service_name"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.name')} (Tiếng Việt) <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <InputText
+                  id="service_name"
+                  value={formData.service_name}
+                  onChange={(e) => setFormData({ ...formData, service_name: e.target.value })}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="service_name_en"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.name')} (English)
+                </label>
+                <InputText
+                  id="service_name_en"
+                  value={formData.service_name_en}
+                  onChange={(e) => setFormData({ ...formData, service_name_en: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="description"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.description')} (Tiếng Việt)
+                </label>
+                <InputTextarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="description_en"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.description')} (English)
+                </label>
+                <InputTextarea
+                  id="description_en"
+                  value={formData.description_en}
+                  onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="icon_name"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.icon')}
+                </label>
+                <InputText
+                  id="icon_name"
+                  value={formData.icon_name}
+                  onChange={(e) => setFormData({ ...formData, icon_name: e.target.value })}
+                  placeholder={t('services.iconPlaceholder')}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+                <p
+                  style={{
+                    marginTop: '0.25rem',
+                    fontSize: '0.875rem',
+                    color: '#6b7280',
+                  }}
+                >
+                  {t('services.iconHint')}{' '}
+                  <a
+                    href="https://fontawesome.com/icons"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#2563eb', textDecoration: 'underline', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.target.style.color = '#1d4ed8')}
+                    onMouseLeave={(e) => (e.target.style.color = '#2563eb')}
+                  >
+                    fontawesome.com
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Dialog>
+
+      {/* <Dialog
+        header={editingService ? t('services.edit') : t('services.addNew')}
+        visible={isDialogOpen}
+        style={{
+          width: '600px',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          borderRadius: '0.375rem',
+        }}
+        footer={dialogFooter}
+        onHide={() => setIsDialogOpen(false)}
+        modal
+        className="p-fluid"
+      >
+        <form onSubmit={handleSubmit} style={{ padding: '1.5rem' }}>
+          <div className="grid" style={{ rowGap: '1rem' }}>
+            <div className="col-12 md:col-6">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="service_name"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.name')} (Tiếng Việt) <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <InputText
+                  id="service_name"
+                  value={formData.service_name}
+                  onChange={(e) => setFormData({ ...formData, service_name: e.target.value })}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12 md:col-6">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="service_name_en"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.name')} (English)
+                </label>
+                <InputText
+                  id="service_name_en"
+                  value={formData.service_name_en}
+                  onChange={(e) => setFormData({ ...formData, service_name_en: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12 md:col-6">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="description"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.description')} (Tiếng Việt)
+                </label>
+                <InputTextarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={3}
+                  style={{
+                    width: '100',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12 md:col-6">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="description_en"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.description')} (English)
+                </label>
+                <InputTextarea
+                  id="description_en"
+                  value={formData.description_en}
+                  onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="icon_name"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('services.icon')}
+                </label>
+                <InputText
+                  id="icon_name"
+                  value={formData.icon_name}
+                  onChange={(e) => setFormData({ ...formData, icon_name: e.target.value })}
+                  placeholder={t('services.iconPlaceholder')}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+                <p
+                  style={{
+                    marginTop: '0.25rem',
+                    fontSize: '0.875rem',
+                    color: '#6b7280',
+                  }}
+                >
+                  {t('services.iconHint')}{' '}
+                  <a
+                    href="https://fontawesome.com/icons"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#2563eb', textDecoration: 'underline', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.target.style.color = '#1d4ed8')}
+                    onMouseLeave={(e) => (e.target.style.color = '#2563eb')}
+                  >
+                    fontawesome.com
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Dialog> */}
+
+      {/* <Dialog
         header={editingService ? t('services.edit') : t('services.addNew')}
         visible={isDialogOpen}
         style={{ width: '600px' }}
@@ -188,46 +563,46 @@ export function ServicesManager() {
             <InputText
               id="service_name"
               value={formData.service_name}
-              onChange={(e) => setFormData({...formData, service_name: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, service_name: e.target.value })}
               required
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="service_name_en">{t('services.name')} (English)</label>
             <InputText
               id="service_name_en"
               value={formData.service_name_en}
-              onChange={(e) => setFormData({...formData, service_name_en: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, service_name_en: e.target.value })}
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="description">{t('services.description')} (Tiếng Việt)</label>
             <InputTextarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="description_en">{t('services.description')} (English)</label>
             <InputTextarea
               id="description_en"
               value={formData.description_en}
-              onChange={(e) => setFormData({...formData, description_en: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
               rows={3}
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="icon_name">{t('services.icon')}</label>
             <InputText
               id="icon_name"
               value={formData.icon_name}
-              onChange={(e) => setFormData({...formData, icon_name: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, icon_name: e.target.value })}
               placeholder={t('services.iconPlaceholder')}
             />
             <p className="form-hint">
@@ -235,7 +610,7 @@ export function ServicesManager() {
             </p>
           </div>
         </form>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

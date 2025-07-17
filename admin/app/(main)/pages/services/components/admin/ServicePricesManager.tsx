@@ -84,10 +84,10 @@ export function ServicePricesManager() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editingPrice) {
-      setPrices(prices.map(p => 
-        p.price_id === editingPrice.price_id 
+      setPrices(prices.map(p =>
+        p.price_id === editingPrice.price_id
           ? { ...p, ...formData }
           : p
       ));
@@ -99,7 +99,7 @@ export function ServicePricesManager() {
       };
       setPrices([...prices, newPrice]);
     }
-    
+
     setIsDialogOpen(false);
   };
 
@@ -131,6 +131,7 @@ export function ServicePricesManager() {
         />
         <Button
           icon="pi pi-trash"
+          style={{ marginLeft: 10 }}
           className="p-button-sm p-button-outlined p-button-danger"
           onClick={() => handleDelete(rowData)}
         />
@@ -163,9 +164,9 @@ export function ServicePricesManager() {
   return (
     <div className="space-y-6">
       <ConfirmDialog />
-      
-      <div className="manager-header">
-        <h3>{t('prices.list')}</h3>
+
+      <div className="manager-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ justifyContent: 'center', alignItems: 'center', marginTop: 'auto', marginBottom: 'auto' }}>{t('prices.list')}</h3>
         <Button
           label={t('prices.add')}
           icon="pi pi-plus"
@@ -173,7 +174,7 @@ export function ServicePricesManager() {
         />
       </div>
 
-      <Accordion multiple activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+      <Accordion multiple activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)} style={{ marginTop: 10 }}>
         {groupedPrices.map((group, index) => (
           <AccordionTab
             key={group.service.service_id}
@@ -214,6 +215,173 @@ export function ServicePricesManager() {
       <Dialog
         header={editingPrice ? t('prices.edit') : t('prices.addNew')}
         visible={isDialogOpen}
+        style={{
+          width: '600px',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          borderRadius: '0.375rem',
+        }}
+        footer={dialogFooter}
+        onHide={() => setIsDialogOpen(false)}
+        modal
+        className="p-fluid"
+      >
+        <form onSubmit={handleSubmit} style={{ padding: '1.5rem' }}>
+          <div className="grid" >
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="service_id"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('prices.service')}
+                </label>
+                <Dropdown
+                  value={formData.service_id}
+                  options={serviceOptions}
+                  onChange={(e) => setFormData({ ...formData, service_id: e.value })}
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder={t('prices.service')}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="price"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('prices.price')} <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <InputText
+                  id="price"
+                  type="number"
+                  value={formData.price.toString()}
+                  onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                  required
+                  min="0"
+                  step="1000"
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="price_description"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('prices.priceDescription')} (Tiếng Việt) <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <InputText
+                  id="price_description"
+                  value={formData.price_description}
+                  onChange={(e) => setFormData({ ...formData, price_description: e.target.value })}
+                  required
+                  placeholder={t('prices.priceDescriptionPlaceholder')}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="field" style={{ marginBottom: '1rem' }}>
+                <label
+                  htmlFor="price_description_en"
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                  }}
+                >
+                  {t('prices.priceDescription')} (English)
+                </label>
+                <InputText
+                  id="price_description_en"
+                  value={formData.price_description_en}
+                  onChange={(e) => setFormData({ ...formData, price_description_en: e.target.value })}
+                  placeholder="e.g., Nursing once a week"
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #d1d5db',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                  onBlur={(e) => (e.target.style.borderColor = '#d1d5db')}
+                />
+              </div>
+            </div>
+            <div className="col-12" style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ marginRight: '0.5rem' }}>
+                <InputSwitch
+                  id="is_popular"
+                  checked={formData.is_popular}
+                  onChange={(e) => setFormData({ ...formData, is_popular: e.value })}
+                  style={{
+                    width: '2.5rem',
+                    height: '1.5rem',
+                  }}
+                />
+              </div>
+              <label
+                htmlFor="is_popular"
+                style={{
+                  fontWeight: '500',
+                  color: '#374151',
+                }}
+              >
+                {t('prices.popular')}
+              </label>
+            </div>
+          </div>
+        </form>
+      </Dialog>
+
+      {/* <Dialog
+        header={editingPrice ? t('prices.edit') : t('prices.addNew')}
+        visible={isDialogOpen}
         style={{ width: '600px' }}
         footer={dialogFooter}
         onHide={() => setIsDialogOpen(false)}
@@ -225,57 +393,57 @@ export function ServicePricesManager() {
             <Dropdown
               value={formData.service_id}
               options={serviceOptions}
-              onChange={(e) => setFormData({...formData, service_id: e.value})}
+              onChange={(e) => setFormData({ ...formData, service_id: e.value })}
               optionLabel="label"
               optionValue="value"
               placeholder={t('prices.service')}
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="price">{t('prices.price')}</label>
             <InputText
               id="price"
               type="number"
               value={formData.price.toString()}
-              onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
               required
               min="0"
               step="1000"
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="price_description">{t('prices.priceDescription')} (Tiếng Việt)</label>
             <InputText
               id="price_description"
               value={formData.price_description}
-              onChange={(e) => setFormData({...formData, price_description: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, price_description: e.target.value })}
               required
               placeholder={t('prices.priceDescriptionPlaceholder')}
             />
           </div>
-          
+
           <div className="form-field">
             <label htmlFor="price_description_en">{t('prices.priceDescription')} (English)</label>
             <InputText
               id="price_description_en"
               value={formData.price_description_en}
-              onChange={(e) => setFormData({...formData, price_description_en: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, price_description_en: e.target.value })}
               placeholder="e.g., Nursing once a week"
             />
           </div>
-          
+
           <div className="form-field-inline">
             <InputSwitch
               id="is_popular"
               checked={formData.is_popular}
-              onChange={(e) => setFormData({...formData, is_popular: e.value})}
+              onChange={(e) => setFormData({ ...formData, is_popular: e.value })}
             />
             <label htmlFor="is_popular">{t('prices.popular')}</label>
           </div>
         </form>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

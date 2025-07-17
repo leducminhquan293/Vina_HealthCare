@@ -15,14 +15,14 @@ function AdminPanel() {
       <div className="max-w-7xl mx-auto">
         <div className="admin-card mb-6">
           <div className="admin-card-header">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-end"> {/* Changed to justify-end to align to right */}
+              <div className="mr-auto"> {/* Pushes content to the left */}
                 <h1>{t('admin.title')}</h1>
                 <p className="text-muted-foreground mt-2">
                   {t('admin.subtitle')}
                 </p>
               </div>
-              <LanguageSwitcher />
+              <LanguageSwitcher /> {/* Adjusted width to w-24 */}
             </div>
           </div>
         </div>
@@ -32,9 +32,9 @@ function AdminPanel() {
             <TabPanel header={t('admin.tabs.services')}>
               <div className="space-y-6">
                 <div className="section-header">
-                  <h2>{t('services.title')}</h2>
+                  {/* <h2>{t('services.title')}</h2> */}
                   <p>
-                    {t('services.subtitle')}
+                    {/* {t('services.subtitle')} */}
                   </p>
                 </div>
                 <ServicesManager />
@@ -44,9 +44,9 @@ function AdminPanel() {
             <TabPanel header={t('admin.tabs.prices')}>
               <div className="space-y-6">
                 <div className="section-header">
-                  <h2>{t('prices.title')}</h2>
+                  {/* <h2>{t('prices.title')}</h2> */}
                   <p>
-                    {t('prices.subtitle')}
+                    {/* {t('prices.subtitle')} */}
                   </p>
                 </div>
                 <ServicePricesManager />
@@ -56,9 +56,9 @@ function AdminPanel() {
             <TabPanel header={t('admin.tabs.features')}>
               <div className="space-y-6">
                 <div className="section-header">
-                  <h2>{t('features.title')}</h2>
+                  {/* <h2>{t('features.title')}</h2> */}
                   <p>
-                    {t('features.subtitle')}
+                    {/* {t('features.subtitle')} */}
                   </p>
                 </div>
                 <ServiceFeaturesManager />
