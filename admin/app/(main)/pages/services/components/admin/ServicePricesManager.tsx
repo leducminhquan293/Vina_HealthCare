@@ -183,9 +183,9 @@ export function ServicePricesManager() {
                 <div className="flex items-center space-x-3">
                   <i className={`${group.service.icon_name} text-lg`}></i>
                   <div>
-                    <h4 className="font-medium">{getLocalizedText(group.service, 'service_name')}</h4>
+                    <h4 className="font-medium">{getLocalizedText(group.service, 'service_name')}</h4>&nbsp;
                     <p className="text-sm text-muted-foreground">
-                      {group.prices.length} {t('prices.pricesCount')}
+                    &nbsp; {group.prices.length} {t('prices.pricesCount')} 
                     </p>
                   </div>
                 </div>

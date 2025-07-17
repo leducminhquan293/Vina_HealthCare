@@ -214,20 +214,20 @@ export function ServiceFeaturesManager() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 justify-center">
                         <span className="font-medium text-sm">
-                          {getLocalizedText(priceGroup.price, 'price_description')}
+                          {getLocalizedText(priceGroup.price, 'price_description')} &nbsp;
                         </span>
                         {priceGroup.price.is_popular && (
-                          <div className="justify-center">
+                          <div className="justify-center" style={{marginTop:-5}}>
                             <Badge
                               value={t('prices.popularBadge')}
                               className="badge-popular"
-                              style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                              style={{ marginLeft: 'auto', marginRight: 'auto',paddingBottom:10 }}
                             />
-                          </div>
+                           </div>
                         )}
                       </div>
                       <span className="text-sm text-muted-foreground justify-center">
-                        {priceGroup.features.length} {t('features.featuresCount')}
+                      &nbsp; {priceGroup.features.length} {t('features.featuresCount')}  
                       </span>
                     </div>
 
