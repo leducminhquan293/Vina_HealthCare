@@ -1,5 +1,4 @@
 import { IsString, IsEmail, IsInt, Min, IsEnum, IsArray, IsIn } from 'class-validator';
-import { Role } from '../schema/user.schema';
 
 export class SignUpDto {
     @IsString()
@@ -18,4 +17,4 @@ export class SignUpDto {
     @IsArray({ message: 'Role phải là một mảng' })
     @IsIn(['admin', 'staff', 'user'], { each: true, message: 'Mỗi role phải là admin, staff hoặc user' })
     roles: string[];
-}
+} 

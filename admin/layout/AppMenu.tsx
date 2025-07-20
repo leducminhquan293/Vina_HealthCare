@@ -15,7 +15,9 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-                { label: 'Dịch vụ', icon: 'pi pi-fw pi-home', to: '/pages/services' }                
+                { label: 'Dịch vụ', icon: 'pi pi-fw pi-home', to: '/pages/services' },
+                { label: 'Quản lý tài khoản', icon: 'pi pi-fw pi-home', to: '/user' },
+                { label: 'Quản lý hồ sơ', icon: 'pi pi-fw pi-home', to: '/medicalstaff' },
             ],
         },
         {

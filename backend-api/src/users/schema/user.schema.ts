@@ -1,35 +1,48 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IsArray, IsIn } from 'class-validator';
 import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-export enum Role {
-  ADMIN = 'admin',
-  STAFF = 'staff',
-  USER = 'user', // Thêm role mặc định nếu cần
+export enum Gender {
+    MALE = 'Male',
+    FEMALE = 'Female',
+    OTHER = 'Other'
 }
 
-@Schema()
+export enum Role {
+    PATIENT = 'Patient',
+    DOCTOR = 'Doctor',
+    NURSE = 'Nurse'
+}
+
+@Schema({ timestamps: true })
 export class User {
-  @Prop({ required: true })
-  name: string;
+    @Prop({ required: true, maxlength: 100 })
+    full_name: string;
 
-  @Prop({ required: true, unique: true })
-  email: string;
+    @Prop({ type: Date })
+    date_of_birth: Date;
 
-  @Prop({ required: true })
-  password: string;
+    @Prop({ enum: Gender })
+    gender: Gender;
 
-  @Prop({ required: true })
-  age: number;
+    @Prop({ maxlength: 20 })
+    phone: string;
 
-  @IsArray({ message: 'Role phải là một mảng' })
-  @IsIn(['admin', 'staff', 'user'], { each: true, message: 'Mỗi role phải là admin, staff hoặc user' })
-  roles: string[];
+    @Prop({ maxlength: 100, unique: true })
+    email: string;
 
-  _id: any;
+    @Prop({ maxlength: 255 })
+    address: string;
 
+    @Prop({ required: true, enum: Role })
+    role: Role;
+
+    @Prop({ default: Date.now })
+    created_at: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// Tạo index cho email
+UserSchema.index({ email: 1 }, { name: 'idx_user_email' }); 
