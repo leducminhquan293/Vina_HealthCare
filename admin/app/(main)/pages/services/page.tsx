@@ -6,9 +6,62 @@ import { ServicesManager } from './components/admin/ServicesManager';
 import { ServicePricesManager } from './components/admin/ServicePricesManager';
 import { ServiceFeaturesManager } from './components/admin/ServiceFeaturesManager';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { useEffect, useState } from 'react';
+import { serviceApi } from './service.services';
+import { Service, ServicePrice } from './types/services';
 
 function AdminPanel() {
+
   const { t } = useLanguage();
+
+  const [services, setServices] = useState<Service[]>([]);
+  const [prices, setPrices] = useState<ServicePrice[]>([]);
+  const [features, setFeatures] = useState<ServicePrice[]>([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const data = await serviceApi.getAllServices();
+        setServices(data);
+        // setLoading(false);
+      } catch (err) {
+        setServices([])
+        // setError(err.message);
+        // setLoading(false);
+      }
+    };
+    fetchServices();
+  }, [])
+
+  useEffect(() => {
+    const fetchPriceServices = async () => {
+      try {
+        const data = await serviceApi.getAllPriceServices();
+        setPrices(data);
+        // setLoading(false);
+      } catch (err) {
+        // setError('Không thể tải dữ liệu: ' + err.message);
+        // setLoading(false);
+        // toast.current.show({ severity: 'error', summary: 'Lỗi', detail: err.message, life: 3000 });
+      }
+    };
+    fetchPriceServices();
+  }, []);
+
+  useEffect(() => {
+    const fetchFeature = async () => {
+      try {
+        const data = await serviceApi.getAllFeatureServices();
+        setFeatures(data);
+        // setLoading(false);
+      } catch (err) {
+        setFeatures([])
+        // setError(err.message);
+        // setLoading(false);
+      }
+    };
+    fetchFeature();
+  }, [])
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -37,7 +90,7 @@ function AdminPanel() {
                     {/* {t('services.subtitle')} */}
                   </p>
                 </div>
-                <ServicesManager />
+                <ServicesManager listService={services} />
               </div>
             </TabPanel>
 
@@ -49,7 +102,7 @@ function AdminPanel() {
                     {/* {t('prices.subtitle')} */}
                   </p>
                 </div>
-                <ServicePricesManager />
+                <ServicePricesManager listService={services} listPrice={prices} />
               </div>
             </TabPanel>
 
@@ -61,7 +114,7 @@ function AdminPanel() {
                     {/* {t('features.subtitle')} */}
                   </p>
                 </div>
-                <ServiceFeaturesManager />
+                <ServiceFeaturesManager listFeature={features} listService={services} listPrice={prices}  />
               </div>
             </TabPanel>
           </TabView>

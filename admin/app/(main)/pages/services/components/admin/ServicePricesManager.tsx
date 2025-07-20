@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -12,20 +12,38 @@ import { ServicePrice } from '../../types/services';
 import { servicePrices as initialPrices, services } from '../../data/mockData';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
+import { serviceApi } from '../../service.services';
 
-export function ServicePricesManager() {
+export function ServicePricesManager({listPrice=[],listService=[]}) {
   const { t, language } = useLanguage();
-  const [prices, setPrices] = useState<ServicePrice[]>(initialPrices);
+  const [services, setServices] = useState<ServicePrice[]>(listService);
+  const [prices, setPrices] = useState<ServicePrice[]>(listPrice);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPrice, setEditingPrice] = useState<ServicePrice | null>(null);
   const [activeIndex, setActiveIndex] = useState<(number | null)[]>([0, 1, 2]);
   const [formData, setFormData] = useState({
-    service_id: 1,
+    _id: 1,
     price: 0,
-    price_description: '',
-    price_description_en: '',
+    description: '',
+    description_en: '',
     is_popular: false
   });
+
+  // useEffect(() => {
+  //   const fetchPriceServices = async () => {
+  //     try {
+  //       const data = await serviceApi.getAllPriceServices();
+  //       console.log(data);
+  //       setPrices(data);
+  //       // setLoading(false);
+  //     } catch (err) {
+  //       // setError('Không thể tải dữ liệu: ' + err.message);
+  //       // setLoading(false);
+  //       // toast.current.show({ severity: 'error', summary: 'Lỗi', detail: err.message, life: 3000 });
+  //     }
+  //   };
+  //   fetchPriceServices();
+  // }, []);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US', {
@@ -44,16 +62,16 @@ export function ServicePricesManager() {
   // Group prices by service
   const groupedPrices = services.map(service => ({
     service,
-    prices: prices.filter(price => price.service_id === service.service_id)
+    prices: prices.filter(price => price.service_id === service._id)
   })).filter(group => group.prices.length > 0);
 
   const handleAdd = () => {
     setEditingPrice(null);
     setFormData({
-      service_id: 1,
+      _id: 1,
       price: 0,
-      price_description: '',
-      price_description_en: '',
+      description: '',
+      description_en: '',
       is_popular: false
     });
     setIsDialogOpen(true);
@@ -62,10 +80,10 @@ export function ServicePricesManager() {
   const handleEdit = (price: ServicePrice) => {
     setEditingPrice(price);
     setFormData({
-      service_id: price.service_id,
+      _id: price._id,
       price: price.price,
-      price_description: price.price_description,
-      price_description_en: price.price_description_en || '',
+      description: price.description,
+      description_en: price.description_en || '',
       is_popular: price.is_popular
     });
     setIsDialogOpen(true);
@@ -77,7 +95,7 @@ export function ServicePricesManager() {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        setPrices(prices.filter(p => p.price_id !== price.price_id));
+        setPrices(prices.filter(p => p._id !== price._id));
       }
     });
   };
@@ -87,15 +105,15 @@ export function ServicePricesManager() {
 
     if (editingPrice) {
       setPrices(prices.map(p =>
-        p.price_id === editingPrice.price_id
+        p._id === editingPrice._id
           ? { ...p, ...formData }
           : p
       ));
     } else {
       const newPrice: ServicePrice = {
-        price_id: Math.max(...prices.map(p => p.price_id)) + 1,
+        _id: Math.max(...prices.map(p => p._id)) + 1,
         ...formData,
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
       };
       setPrices([...prices, newPrice]);
     }
@@ -108,7 +126,7 @@ export function ServicePricesManager() {
   };
 
   const descriptionBodyTemplate = (rowData: ServicePrice) => {
-    return getLocalizedText(rowData, 'price_description');
+    return getLocalizedText(rowData, 'description');
   };
 
   const popularBodyTemplate = (rowData: ServicePrice) => {
@@ -118,7 +136,7 @@ export function ServicePricesManager() {
   };
 
   const createdBodyTemplate = (rowData: ServicePrice) => {
-    return new Date(rowData.created_at).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US');
+    return new Date(rowData.createdAt).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US');
   };
 
   const actionsBodyTemplate = (rowData: ServicePrice) => {
@@ -141,8 +159,8 @@ export function ServicePricesManager() {
 
   const serviceOptions = services.map(service => ({
     label: getLocalizedText(service, 'service_name'),
-    value: service.service_id,
-    icon: service.icon_name
+    value: service._id,
+    icon: service.icon
   }));
 
   const dialogFooter = (
@@ -177,11 +195,11 @@ export function ServicePricesManager() {
       <Accordion multiple activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)} style={{ marginTop: 10 }}>
         {groupedPrices.map((group, index) => (
           <AccordionTab
-            key={group.service.service_id}
+            key={group.service._id}
             header={
               <div className="flex items-center justify-between w-full pr-4">
                 <div className="flex items-center space-x-3">
-                  <i className={`${group.service.icon_name} text-lg`}></i>
+                  <i className={`${group.service.icon} text-lg`}></i>
                   <div>
                     <h4 className="font-medium">{getLocalizedText(group.service, 'service_name')}</h4>&nbsp;
                     <p className="text-sm text-muted-foreground">
@@ -201,7 +219,7 @@ export function ServicePricesManager() {
             }
           >
             <DataTable value={group.prices} stripedRows>
-              <Column field="price_id" header={t('common.id')} sortable style={{ width: '10%' }} />
+              <Column field="_id" header={t('common.id')} sortable style={{ width: '10%' }} />
               <Column body={priceBodyTemplate} header={t('common.price')} sortable style={{ width: '20%' }} />
               <Column body={descriptionBodyTemplate} header={t('common.description')} style={{ width: '30%' }} />
               <Column body={popularBodyTemplate} header={t('prices.popularBadge')} style={{ width: '15%' }} />
@@ -230,7 +248,7 @@ export function ServicePricesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="service_id"
+                  htmlFor="_id"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -241,9 +259,9 @@ export function ServicePricesManager() {
                   {t('prices.service')}
                 </label>
                 <Dropdown
-                  value={formData.service_id}
+                  value={formData._id}
                   options={serviceOptions}
-                  onChange={(e) => setFormData({ ...formData, service_id: e.value })}
+                  onChange={(e) => setFormData({ ...formData, _id: e.value })}
                   optionLabel="label"
                   optionValue="value"
                   placeholder={t('prices.service')}
@@ -295,7 +313,7 @@ export function ServicePricesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="price_description"
+                  htmlFor="description"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -306,9 +324,9 @@ export function ServicePricesManager() {
                   {t('prices.priceDescription')} (Tiếng Việt) <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <InputText
-                  id="price_description"
-                  value={formData.price_description}
-                  onChange={(e) => setFormData({ ...formData, price_description: e.target.value })}
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   required
                   placeholder={t('prices.priceDescriptionPlaceholder')}
                   style={{
@@ -326,7 +344,7 @@ export function ServicePricesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="price_description_en"
+                  htmlFor="description_en"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -337,9 +355,9 @@ export function ServicePricesManager() {
                   {t('prices.priceDescription')} (English)
                 </label>
                 <InputText
-                  id="price_description_en"
-                  value={formData.price_description_en}
-                  onChange={(e) => setFormData({ ...formData, price_description_en: e.target.value })}
+                  id="description_en"
+                  value={formData.description_en}
+                  onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
                   placeholder="e.g., Nursing once a week"
                   style={{
                     width: '100%',
@@ -379,71 +397,7 @@ export function ServicePricesManager() {
         </form>
       </Dialog>
 
-      {/* <Dialog
-        header={editingPrice ? t('prices.edit') : t('prices.addNew')}
-        visible={isDialogOpen}
-        style={{ width: '600px' }}
-        footer={dialogFooter}
-        onHide={() => setIsDialogOpen(false)}
-        modal
-      >
-        <form onSubmit={handleSubmit}>
-          <div className="form-field">
-            <label htmlFor="service_id">{t('prices.service')}</label>
-            <Dropdown
-              value={formData.service_id}
-              options={serviceOptions}
-              onChange={(e) => setFormData({ ...formData, service_id: e.value })}
-              optionLabel="label"
-              optionValue="value"
-              placeholder={t('prices.service')}
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="price">{t('prices.price')}</label>
-            <InputText
-              id="price"
-              type="number"
-              value={formData.price.toString()}
-              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-              required
-              min="0"
-              step="1000"
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="price_description">{t('prices.priceDescription')} (Tiếng Việt)</label>
-            <InputText
-              id="price_description"
-              value={formData.price_description}
-              onChange={(e) => setFormData({ ...formData, price_description: e.target.value })}
-              required
-              placeholder={t('prices.priceDescriptionPlaceholder')}
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="price_description_en">{t('prices.priceDescription')} (English)</label>
-            <InputText
-              id="price_description_en"
-              value={formData.price_description_en}
-              onChange={(e) => setFormData({ ...formData, price_description_en: e.target.value })}
-              placeholder="e.g., Nursing once a week"
-            />
-          </div>
-
-          <div className="form-field-inline">
-            <InputSwitch
-              id="is_popular"
-              checked={formData.is_popular}
-              onChange={(e) => setFormData({ ...formData, is_popular: e.value })}
-            />
-            <label htmlFor="is_popular">{t('prices.popular')}</label>
-          </div>
-        </form>
-      </Dialog> */}
+     
     </div>
   );
 }

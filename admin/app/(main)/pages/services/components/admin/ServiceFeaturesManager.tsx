@@ -14,18 +14,18 @@ import { serviceFeatures as initialFeatures, servicePrices, services } from '../
 import { useLanguage } from '../../contexts/LanguageContext';
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 
-export function ServiceFeaturesManager() {
+export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=[]}) {
   const { t, language } = useLanguage();
-  const [features, setFeatures] = useState<ServiceFeature[]>(initialFeatures);
+  const [features, setFeatures] = useState<ServiceFeature[]>(listFeature);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingFeature, setEditingFeature] = useState<ServiceFeature | null>(null);
   const [activeIndex, setActiveIndex] = useState<(number | null)[]>([0, 1, 2]);
   const [formData, setFormData] = useState({
     price_id: 1,
-    feature_name: '',
-    feature_name_en: '',
-    feature_description: '',
-    feature_description_en: ''
+    name: '',
+    name_en: '',
+    description: '',
+    description_en: ''
   });
 
   const getLocalizedText = (item: any, field: string) => {
@@ -37,10 +37,10 @@ export function ServiceFeaturesManager() {
 
   // Group features by service
   const groupedFeatures = services.map(service => {
-    const servicePricesForService = servicePrices.filter(p => p.service_id === service.service_id);
+    const servicePricesForService = servicePrices.filter(p => p.service_id === service._id);
     const pricesWithFeatures = servicePricesForService.map(price => ({
       price,
-      features: features.filter(f => f.price_id === price.price_id)
+      features: features.filter(f => f.price_id === price._id)
     })).filter(priceGroup => priceGroup.features.length > 0);
 
     return {
@@ -53,11 +53,11 @@ export function ServiceFeaturesManager() {
   const handleAdd = () => {
     setEditingFeature(null);
     setFormData({
-      price_id: servicePrices[0]?.price_id || 1,
-      feature_name: '',
-      feature_name_en: '',
-      feature_description: '',
-      feature_description_en: ''
+      price_id: servicePrices[0]?._id || 1,
+      name: '',
+      name_en: '',
+      description: '',
+      description_en: ''
     });
     setIsDialogOpen(true);
   };
@@ -66,10 +66,10 @@ export function ServiceFeaturesManager() {
     setEditingFeature(feature);
     setFormData({
       price_id: feature.price_id,
-      feature_name: feature.feature_name,
-      feature_name_en: feature.feature_name_en || '',
-      feature_description: feature.feature_description,
-      feature_description_en: feature.feature_description_en || ''
+      name: feature.name,
+      name_en: feature.name_en || '',
+      description: feature.description,
+      description_en: feature.description_en || ''
     });
     setIsDialogOpen(true);
   };
@@ -80,7 +80,7 @@ export function ServiceFeaturesManager() {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        setFeatures(features.filter(f => f.feature_id !== feature.feature_id));
+        setFeatures(features.filter(f => f._id !== feature._id));
       }
     });
   };
@@ -90,15 +90,15 @@ export function ServiceFeaturesManager() {
 
     if (editingFeature) {
       setFeatures(features.map(f =>
-        f.feature_id === editingFeature.feature_id
+        f._id === editingFeature._id
           ? { ...f, ...formData }
           : f
       ));
     } else {
       const newFeature: ServiceFeature = {
-        feature_id: Math.max(...features.map(f => f.feature_id)) + 1,
+        _id: Math.max(...features.map(f => f._id)) + 1,
         ...formData,
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
       };
       setFeatures([...features, newFeature]);
     }
@@ -107,19 +107,19 @@ export function ServiceFeaturesManager() {
   };
 
   const nameBodyTemplate = (rowData: ServiceFeature) => {
-    return <span className="font-medium">{getLocalizedText(rowData, 'feature_name')}</span>;
+    return <span className="font-medium">{getLocalizedText(rowData, 'name')}</span>;
   };
 
   const descriptionBodyTemplate = (rowData: ServiceFeature) => {
     return (
       <div className="max-w-xs truncate">
-        {getLocalizedText(rowData, 'feature_description')}
+        {getLocalizedText(rowData, 'description')}
       </div>
     );
   };
 
   const createdBodyTemplate = (rowData: ServiceFeature) => {
-    return new Date(rowData.created_at).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US');
+    return new Date(rowData.createdAt).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US');
   };
 
   const actionsBodyTemplate = (rowData: ServiceFeature) => {
@@ -141,10 +141,10 @@ export function ServiceFeaturesManager() {
   };
 
   const priceOptions = servicePrices.map(price => {
-    const service = services.find(s => s.service_id === price.service_id);
+    const service = services.find(s => s._id === price.service_id);
     return {
       label: `${service ? getLocalizedText(service, 'service_name') : 'Unknown'} - ${getLocalizedText(price, 'price_description')}`,
-      value: price.price_id,
+      value: price._id,
       isPopular: price.is_popular
     };
   });
@@ -192,10 +192,10 @@ export function ServiceFeaturesManager() {
       <Accordion multiple activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)} style={{ marginTop: 10 }}>
         {groupedFeatures.map((group, index) => (
           <AccordionTab
-            key={group.service.service_id}
+            key={group.service._id}
             header={
               <div className="flex items-center space-x-3">
-                <i className={`${group.service.icon_name} text-lg`}></i>
+                <i className={`${group.service.icon} text-lg`}></i>
                 <div>
                   <h4 className="font-medium">{getLocalizedText(group.service, 'service_name')}</h4>
                   <p className="text-sm text-muted-foreground">
@@ -208,7 +208,7 @@ export function ServiceFeaturesManager() {
             <div className="space-y-4">
               {group.pricesWithFeatures.map((priceGroup, priceIndex) => (
                 <Panel
-                  key={priceGroup.price.price_id}
+                  key={priceGroup.price._id}
                   className="border-0"
                   header={
                     <div className="flex items-center justify-between">
@@ -249,7 +249,7 @@ export function ServiceFeaturesManager() {
                   toggleable
                 >
                   <DataTable value={priceGroup.features} stripedRows>
-                    <Column field="feature_id" header={t('common.id')} sortable style={{ width: '10%' }} />
+                    <Column field="id" header={t('common.id')} sortable style={{ width: '10%' }} />
                     <Column body={nameBodyTemplate} header={t('features.name')} sortable style={{ width: '25%' }} />
                     <Column body={descriptionBodyTemplate} header={t('features.description')} style={{ width: '40%' }} />
                     <Column body={createdBodyTemplate} header={t('features.created')} sortable style={{ width: '15%' }} />
@@ -313,7 +313,7 @@ export function ServiceFeaturesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="feature_name"
+                  htmlFor="name"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -324,9 +324,9 @@ export function ServiceFeaturesManager() {
                   {t('features.name')} (Tiếng Việt) <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <InputText
-                  id="feature_name"
-                  value={formData.feature_name}
-                  onChange={(e) => setFormData({ ...formData, feature_name: e.target.value })}
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                   placeholder={t('features.namePlaceholder')}
                   style={{
@@ -344,7 +344,7 @@ export function ServiceFeaturesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="feature_name_en"
+                  htmlFor="name_en"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -355,9 +355,9 @@ export function ServiceFeaturesManager() {
                   {t('features.name')} (English)
                 </label>
                 <InputText
-                  id="feature_name_en"
-                  value={formData.feature_name_en}
-                  onChange={(e) => setFormData({ ...formData, feature_name_en: e.target.value })}
+                  id="name_en"
+                  value={formData.name_en}
+                  onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
                   placeholder="e.g., Personal hygiene care"
                   style={{
                     width: '100%',
@@ -374,7 +374,7 @@ export function ServiceFeaturesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="feature_description"
+                  htmlFor="description"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -385,9 +385,9 @@ export function ServiceFeaturesManager() {
                   {t('features.description')} (Tiếng Việt)
                 </label>
                 <InputTextarea
-                  id="feature_description"
-                  value={formData.feature_description}
-                  onChange={(e) => setFormData({ ...formData, feature_description: e.target.value })}
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                   placeholder={t('features.descriptionPlaceholder')}
                   style={{
@@ -405,7 +405,7 @@ export function ServiceFeaturesManager() {
             <div className="col-12">
               <div className="field" style={{ marginBottom: '1rem' }}>
                 <label
-                  htmlFor="feature_description_en"
+                  htmlFor="description_en"
                   style={{
                     display: 'block',
                     marginBottom: '0.5rem',
@@ -416,9 +416,9 @@ export function ServiceFeaturesManager() {
                   {t('features.description')} (English)
                 </label>
                 <InputTextarea
-                  id="feature_description_en"
-                  value={formData.feature_description_en}
-                  onChange={(e) => setFormData({ ...formData, feature_description_en: e.target.value })}
+                  id="description_en"
+                  value={formData.description_en}
+                  onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
                   rows={3}
                   placeholder="Detailed description of this feature..."
                   style={{
@@ -437,72 +437,7 @@ export function ServiceFeaturesManager() {
         </form>
       </Dialog>
 
-      {/* <Dialog
-        header={editingFeature ? t('features.edit') : t('features.addNew')}
-        visible={isDialogOpen}
-        style={{ width: '600px' }}
-        footer={dialogFooter}
-        onHide={() => setIsDialogOpen(false)}
-        modal
-      >
-        <form onSubmit={handleSubmit}>
-          <div className="form-field">
-            <label htmlFor="price_id">{t('features.pricePackage')}</label>
-            <Dropdown
-              value={formData.price_id}
-              options={priceOptions}
-              onChange={(e) => setFormData({ ...formData, price_id: e.value })}
-              optionLabel="label"
-              optionValue="value"
-              itemTemplate={priceOptionTemplate}
-              placeholder={t('features.pricePackage')}
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="feature_name">{t('features.name')} (Tiếng Việt)</label>
-            <InputText
-              id="feature_name"
-              value={formData.feature_name}
-              onChange={(e) => setFormData({ ...formData, feature_name: e.target.value })}
-              required
-              placeholder={t('features.namePlaceholder')}
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="feature_name_en">{t('features.name')} (English)</label>
-            <InputText
-              id="feature_name_en"
-              value={formData.feature_name_en}
-              onChange={(e) => setFormData({ ...formData, feature_name_en: e.target.value })}
-              placeholder="e.g., Personal hygiene care"
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="feature_description">{t('features.description')} (Tiếng Việt)</label>
-            <InputTextarea
-              id="feature_description"
-              value={formData.feature_description}
-              onChange={(e) => setFormData({ ...formData, feature_description: e.target.value })}
-              rows={3}
-              placeholder={t('features.descriptionPlaceholder')}
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="feature_description_en">{t('features.description')} (English)</label>
-            <InputTextarea
-              id="feature_description_en"
-              value={formData.feature_description_en}
-              onChange={(e) => setFormData({ ...formData, feature_description_en: e.target.value })}
-              rows={3}
-              placeholder="Detailed description of this feature..."
-            />
-          </div>
-        </form>
-      </Dialog> */}
+     
     </div>
   );
 }

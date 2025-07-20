@@ -15,6 +15,12 @@ export class DMFeatureService {
   @Prop({ required: true })
   description: string;  
 
+  @Prop({ required: true })
+  name_en: string;
+
+  @Prop({ required: true })
+  description_en: string;  
+
 }
 
 export const DMFeatureServiceSchema = SchemaFactory.createForClass(DMFeatureService);

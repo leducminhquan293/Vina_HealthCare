@@ -3,3 +3,6 @@ admin/node_modules/
 
 # Ignore .next in admin folder
 admin/.next/
+
+backend-api/node_modules
+backend-api/dist

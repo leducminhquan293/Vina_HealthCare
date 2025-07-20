@@ -1,31 +1,31 @@
 export interface Service {
-  service_id: number;
-  service_name: string;
-  service_name_en?: string;
+  _id: number;
+  name: string;
+  name_en?: string;
   description: string;
   description_en?: string;
-  icon_name: string;
-  created_at: string;
+  icon: string;
+  createdAt: string;
 }
 
 export interface ServicePrice {
-  price_id: number;
+  _id: number;
   service_id: number;
   price: number;
-  price_description: string;
-  price_description_en?: string;
+  description: string;
+  description_en?: string;
   is_popular: boolean;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface ServiceFeature {
-  feature_id: number;
+  _id: number;
   price_id: number;
-  feature_name: string;
-  feature_name_en?: string;
-  feature_description: string;
-  feature_description_en?: string;
-  created_at: string;
+  name: string;
+  name_en?: string;
+  description: string;
+  description_en?: string;
+  createdAt: string;
 }
 
 export interface ServiceWithPricing {

@@ -15,6 +15,13 @@ export class DMService {
   @Prop({ required: true })
   icon: string;
 
+  @Prop({ required: true })
+  name_en: string;
+  
+  @Prop({ required: true })
+  description_en: string;
+
+
 }
 
 export const DMServiceSchema = SchemaFactory.createForClass(DMService);
