@@ -8,21 +8,27 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Badge } from 'primereact/badge';
 import { Accordion, AccordionTab } from 'primereact/accordion';
-import { ServicePrice } from '../../types/services';
+import { Service, ServicePrice } from '../../types/services';
 import { servicePrices as initialPrices, services } from '../../data/mockData';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 import { serviceApi } from '../../service.services';
+interface PriceServicesManagerProps {
+  listService: Service[];
+  listPrice: ServicePrice[]
+}
 
-export function ServicePricesManager({listPrice=[],listService=[]}) {
+export const ServicePricesManager: React.FC<PriceServicesManagerProps> = ({ listService = [], listPrice = [] }) => {
+
+  // export function ServicePricesManager({listPrice=[],listService=[]}) {
   const { t, language } = useLanguage();
-  const [services, setServices] = useState<ServicePrice[]>(listService);
+  const [services, setServices] = useState<Service[]>(listService);
   const [prices, setPrices] = useState<ServicePrice[]>(listPrice);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPrice, setEditingPrice] = useState<ServicePrice | null>(null);
   const [activeIndex, setActiveIndex] = useState<(number | null)[]>([0, 1, 2]);
   const [formData, setFormData] = useState({
-    _id: 1,
+    service_id: 1,
     price: 0,
     description: '',
     description_en: '',
@@ -68,7 +74,7 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
   const handleAdd = () => {
     setEditingPrice(null);
     setFormData({
-      _id: 1,
+      service_id: 1,
       price: 0,
       description: '',
       description_en: '',
@@ -80,7 +86,7 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
   const handleEdit = (price: ServicePrice) => {
     setEditingPrice(price);
     setFormData({
-      _id: price._id,
+      service_id: price.service_id,
       price: price.price,
       description: price.description,
       description_en: price.description_en || '',
@@ -94,28 +100,22 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
       message: t('prices.confirmDelete'),
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+      accept:async () => {
+        await serviceApi.deletePriceService(price._id);
         setPrices(prices.filter(p => p._id !== price._id));
       }
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (editingPrice) {
-      setPrices(prices.map(p =>
-        p._id === editingPrice._id
-          ? { ...p, ...formData }
-          : p
-      ));
+      const updatedPrice = await serviceApi.updatePriceService(editingPrice._id, formData);
+      setPrices(prices.map(s => (s._id === updatedPrice.id ? updatedPrice : s)));
     } else {
-      const newPrice: ServicePrice = {
-        _id: Math.max(...prices.map(p => p._id)) + 1,
-        ...formData,
-        createdAt: new Date().toISOString()
-      };
-      setPrices([...prices, newPrice]);
+      const newService = await serviceApi.createPriceService(formData);
+      setPrices([...prices, newService]);
     }
 
     setIsDialogOpen(false);
@@ -158,7 +158,7 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
   };
 
   const serviceOptions = services.map(service => ({
-    label: getLocalizedText(service, 'service_name'),
+    label: getLocalizedText(service, 'name'),
     value: service._id,
     icon: service.icon
   }));
@@ -201,9 +201,9 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
                 <div className="flex items-center space-x-3">
                   <i className={`${group.service.icon} text-lg`}></i>
                   <div>
-                    <h4 className="font-medium">{getLocalizedText(group.service, 'service_name')}</h4>&nbsp;
+                    <h4 className="font-medium">{getLocalizedText(group.service, 'name')}</h4>&nbsp;
                     <p className="text-sm text-muted-foreground">
-                    &nbsp; {group.prices.length} {t('prices.pricesCount')} 
+                      &nbsp; {group.prices.length} {t('prices.pricesCount')}
                     </p>
                   </div>
                 </div>
@@ -259,9 +259,11 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
                   {t('prices.service')}
                 </label>
                 <Dropdown
-                  value={formData._id}
+                  value={formData.service_id}
                   options={serviceOptions}
-                  onChange={(e) => setFormData({ ...formData, _id: e.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, service_id: e.value })
+                  }
                   optionLabel="label"
                   optionValue="value"
                   placeholder={t('prices.service')}
@@ -397,7 +399,7 @@ export function ServicePricesManager({listPrice=[],listService=[]}) {
         </form>
       </Dialog>
 
-     
+
     </div>
   );
 }

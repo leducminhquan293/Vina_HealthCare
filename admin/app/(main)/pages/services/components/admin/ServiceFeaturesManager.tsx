@@ -9,13 +9,23 @@ import { Dropdown } from 'primereact/dropdown';
 import { Badge } from 'primereact/badge';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Panel } from 'primereact/panel';
-import { ServiceFeature } from '../../types/services';
+import { Service, ServiceFeature, ServicePrice } from '../../types/services';
 import { serviceFeatures as initialFeatures, servicePrices, services } from '../../data/mockData';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
+import { serviceApi } from '../../service.services';
+interface FeatureServicesManagerProps {
+  listService: Service[];
+  listPrice: ServicePrice[]
+  listFeature: ServiceFeature[]
+}
 
-export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=[]}) {
+export const ServiceFeaturesManager: React.FC<FeatureServicesManagerProps> = ({ listPrice = [], listService = [], listFeature = [] }) => {
+
+  // export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=[]}) {
   const { t, language } = useLanguage();
+  const [services, setServices] = useState<Service[]>(listService);
+  const [prices, setPrices] = useState<ServicePrice[]>(listPrice);
   const [features, setFeatures] = useState<ServiceFeature[]>(listFeature);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingFeature, setEditingFeature] = useState<ServiceFeature | null>(null);
@@ -37,11 +47,13 @@ export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=
 
   // Group features by service
   const groupedFeatures = services.map(service => {
-    const servicePricesForService = servicePrices.filter(p => p.service_id === service._id);
+    const servicePricesForService = prices.filter(p => p.service_id === service._id);
     const pricesWithFeatures = servicePricesForService.map(price => ({
       price,
       features: features.filter(f => f.price_id === price._id)
     })).filter(priceGroup => priceGroup.features.length > 0);
+
+
 
     return {
       service,
@@ -79,27 +91,21 @@ export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=
       message: t('features.confirmDelete'),
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+      accept: async () => {
+        await serviceApi.deleteFeatureService(feature._id);
         setFeatures(features.filter(f => f._id !== feature._id));
       }
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (editingFeature) {
-      setFeatures(features.map(f =>
-        f._id === editingFeature._id
-          ? { ...f, ...formData }
-          : f
-      ));
+      const updatedFeature = await serviceApi.updateFeatureService(editingFeature._id, formData);
+      setFeatures(features.map(s => (s._id === updatedFeature.id ? updatedFeature : s)));
     } else {
-      const newFeature: ServiceFeature = {
-        _id: Math.max(...features.map(f => f._id)) + 1,
-        ...formData,
-        createdAt: new Date().toISOString()
-      };
+      const newFeature = await serviceApi.createFeatureService(formData);
       setFeatures([...features, newFeature]);
     }
 
@@ -140,10 +146,10 @@ export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=
     );
   };
 
-  const priceOptions = servicePrices.map(price => {
+  const priceOptions = prices.map(price => {
     const service = services.find(s => s._id === price.service_id);
     return {
-      label: `${service ? getLocalizedText(service, 'service_name') : 'Unknown'} - ${getLocalizedText(price, 'price_description')}`,
+      label: `${service ? getLocalizedText(service, 'name') : 'Unknown'} - ${getLocalizedText(price, 'description')}`,
       value: price._id,
       isPopular: price.is_popular
     };
@@ -217,17 +223,17 @@ export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=
                           {getLocalizedText(priceGroup.price, 'price_description')} &nbsp;
                         </span>
                         {priceGroup.price.is_popular && (
-                          <div className="justify-center" style={{marginTop:-5}}>
+                          <div className="justify-center" style={{ marginTop: -5 }}>
                             <Badge
                               value={t('prices.popularBadge')}
                               className="badge-popular"
-                              style={{ marginLeft: 'auto', marginRight: 'auto',paddingBottom:10 }}
+                              style={{ marginLeft: 'auto', marginRight: 'auto', paddingBottom: 10 }}
                             />
-                           </div>
+                          </div>
                         )}
                       </div>
                       <span className="text-sm text-muted-foreground justify-center">
-                      &nbsp; {priceGroup.features.length} {t('features.featuresCount')}  
+                        &nbsp; {priceGroup.features.length} {t('features.featuresCount')}
                       </span>
                     </div>
 
@@ -249,7 +255,7 @@ export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=
                   toggleable
                 >
                   <DataTable value={priceGroup.features} stripedRows>
-                    <Column field="id" header={t('common.id')} sortable style={{ width: '10%' }} />
+                    <Column field="_id" header={t('common.id')} sortable style={{ width: '10%' }} />
                     <Column body={nameBodyTemplate} header={t('features.name')} sortable style={{ width: '25%' }} />
                     <Column body={descriptionBodyTemplate} header={t('features.description')} style={{ width: '40%' }} />
                     <Column body={createdBodyTemplate} header={t('features.created')} sortable style={{ width: '15%' }} />
@@ -437,7 +443,7 @@ export function ServiceFeaturesManager({listPrice=[],listService=[],listFeature=
         </form>
       </Dialog>
 
-     
+
     </div>
   );
 }

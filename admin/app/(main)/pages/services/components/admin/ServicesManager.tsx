@@ -11,8 +11,12 @@ import { services as initialServices } from '../../data/mockData';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 import { serviceApi } from '../../service.services';
+interface ServicesManagerProps {
+  listService: Service[];
+}
 
-export function ServicesManager({ listService = []}) {
+export const ServicesManager: React.FC<ServicesManagerProps> = ({ listService = [] }) => {
+// export function ServicesManager({ listService = []}) {
   const { t, language } = useLanguage();
   const [services, setServices] = useState<Service[]>(listService);
  
@@ -193,6 +197,8 @@ export function ServicesManager({ listService = []}) {
     </div>
   );
 
+  console.log('M')
+  console.log(services)
   return (
     <div className="space-y-6">
       <ConfirmDialog />
