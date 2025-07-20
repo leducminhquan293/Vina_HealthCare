@@ -12,6 +12,9 @@ export class DMPriceService {
   @Prop({ required: true })
   description: string;
 
+  @Prop({ required: true })
+  description_en: string;
+
   @Prop({ type: Number })
   price: number;
 

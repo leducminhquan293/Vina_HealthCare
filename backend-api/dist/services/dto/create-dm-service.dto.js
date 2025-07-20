@@ -4,6 +4,8 @@ exports.CreateDMServiceDTO = void 0;
 class CreateDMServiceDTO {
     name;
     description;
+    name_en;
+    description_en;
     icon;
 }
 exports.CreateDMServiceDTO = CreateDMServiceDTO;

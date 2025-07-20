@@ -5,6 +5,7 @@ class CreateDMPriceServiceDTO {
     service_id;
     price;
     description;
+    description_en;
     is_popular;
 }
 exports.CreateDMPriceServiceDTO = CreateDMPriceServiceDTO;

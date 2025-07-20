@@ -14,6 +14,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 let DMPriceService = class DMPriceService {
     service_id;
     description;
+    description_en;
     price;
     is_popular;
 };
@@ -26,6 +27,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], DMPriceService.prototype, "description", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], DMPriceService.prototype, "description_en", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: Number }),
     __metadata("design:type", Number)

@@ -4,6 +4,8 @@ export declare class DMFeatureService {
     price_id: string;
     name: string;
     description: string;
+    name_en: string;
+    description_en: string;
 }
 export declare const DMFeatureServiceSchema: import("mongoose").Schema<DMFeatureService, import("mongoose").Model<DMFeatureService, any, any, any, Document<unknown, any, DMFeatureService, any> & DMFeatureService & {
     _id: import("mongoose").Types.ObjectId;

@@ -15,6 +15,8 @@ let DMService = class DMService {
     name;
     description;
     icon;
+    name_en;
+    description_en;
 };
 exports.DMService = DMService;
 __decorate([
@@ -29,6 +31,14 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], DMService.prototype, "icon", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], DMService.prototype, "name_en", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], DMService.prototype, "description_en", void 0);
 exports.DMService = DMService = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], DMService);

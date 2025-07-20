@@ -4,6 +4,8 @@ export declare class DMService {
     name: string;
     description: string;
     icon: string;
+    name_en: string;
+    description_en: string;
 }
 export declare const DMServiceSchema: import("mongoose").Schema<DMService, import("mongoose").Model<DMService, any, any, any, Document<unknown, any, DMService, any> & DMService & {
     _id: import("mongoose").Types.ObjectId;

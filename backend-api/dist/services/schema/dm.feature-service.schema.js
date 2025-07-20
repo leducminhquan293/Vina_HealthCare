@@ -15,6 +15,8 @@ let DMFeatureService = class DMFeatureService {
     price_id;
     name;
     description;
+    name_en;
+    description_en;
 };
 exports.DMFeatureService = DMFeatureService;
 __decorate([
@@ -29,6 +31,14 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], DMFeatureService.prototype, "description", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], DMFeatureService.prototype, "name_en", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], DMFeatureService.prototype, "description_en", void 0);
 exports.DMFeatureService = DMFeatureService = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], DMFeatureService);

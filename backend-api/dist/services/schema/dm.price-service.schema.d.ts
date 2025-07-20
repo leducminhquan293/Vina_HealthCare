@@ -3,6 +3,7 @@ export type DMPriceServiceDocument = DMPriceService & Document;
 export declare class DMPriceService {
     service_id: string;
     description: string;
+    description_en: string;
     price: number;
     is_popular: boolean;
 }
