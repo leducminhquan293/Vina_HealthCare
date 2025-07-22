@@ -30,10 +30,12 @@ const FeatureTable: React.FC<FeatureTableProps> = ({ features, onAdd, onEdit, on
         <Button icon="pi pi-plus" className="p-button-outlined p-button-secondary" onClick={onAdd} />
       </div>
       <DataTable value={features} responsiveLayout="scroll" rowGroupMode="subheader" groupRowsBy="price_id" rowGroupHeaderTemplate={rowGroupHeaderTemplate} sortMode="single" sortField="price_id" sortOrder={1} >
-        <Column field="feature_id" header="ID" style={{ width: '60px' }} />
+        <Column field="_id" header="ID" style={{ width: '60px' }} />
         <Column field="price_id" header="Mô tả giá dịch vụ" body={rowData => getPriceDescription(rowData.price_id)} />
-        <Column field="name" header="Tên đặc điểm" />
+        <Column field="name" header="Tên tính năng (VI)" />
         <Column field="name_en" header="Feature Name (EN)" />
+        <Column field="description" header="Mô tả (VI)" />
+        <Column field="description_en" header="Description (EN)" />
         <Column field="is_active" header="Kích hoạt" body={rowData => rowData.is_active ? '✔️' : ''} />
         <Column
           header="Thao tác"

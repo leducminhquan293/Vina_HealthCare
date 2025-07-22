@@ -39,7 +39,7 @@ const PriceTable: React.FC<PriceTableProps> = ({ prices, onAdd, onEdit, onDelete
         <Button icon="pi pi-plus" className="p-button-outlined p-button-secondary" onClick={onAdd} />
       </div>
       <DataTable value={prices} responsiveLayout="scroll" rowGroupMode="subheader" groupRowsBy="service_id" rowGroupHeaderTemplate={rowGroupHeaderTemplate} sortMode="single" sortField="service_id" sortOrder={1} >
-        <Column field="_id" header="ID (Mongo)" style={{ width: '180px' }} />
+        <Column field="_id" header="ID" style={{ width: '180px' }} />
         <Column field="description" header="Mô tả (VI)" />
         <Column field="description_en" header="Mô tả (EN)" />
         <Column field="price" header="Giá" body={rowData => formatPrice(rowData.price)} />

@@ -3,6 +3,7 @@ export class CreateDMFeatureServiceDTO {
   description: string;
   name_en: string;
   description_en: string;
-  icon: string; 
+  icon: string;
+  is_active: boolean;
 }
 

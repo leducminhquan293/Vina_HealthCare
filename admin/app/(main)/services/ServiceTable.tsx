@@ -37,13 +37,10 @@ const ServiceTable: React.FC<ServiceTableProps> = ({ services, onAdd, onEdit, on
       <div className="flex justify-content-end mb-3">
         <Button icon="pi pi-plus" className="p-button-outlined p-button-secondary" onClick={onAdd} />
       </div>
-      <div className="mb-2" style={{ color: '#888', fontSize: 13 }}>
-        <span>Nhập mã icon theo <a href="https://primereact.org/icons/" target="_blank" rel="noopener noreferrer">PrimeIcons</a>, ví dụ: <code>pi pi-home</code>, <code>pi pi-user</code>, <code>pi pi-cog</code>...</span>
-      </div>
       <DataTable value={services} responsiveLayout="scroll">
         <Column field="_id" header="ID" style={{ width: '60px' }} body={rowData => renderValue(rowData._id)} />
         <Column field="icon" header="Icon" body={renderIcon} />
-        <Column field="name" header="Tên dịch vụ" body={rowData => renderValue(rowData.name)} />
+        <Column field="name" header="Tên dịch vụ (VI)" body={rowData => renderValue(rowData.name)} />
         <Column field="name_en" header="Service Name (EN)" body={rowData => renderValue(rowData.name_en)} />
         <Column field="description" header="Mô tả (VI)" body={rowData => renderValue(rowData.description)} />
         <Column field="description_en" header="Description (EN)" body={rowData => renderValue(rowData.description_en)} />

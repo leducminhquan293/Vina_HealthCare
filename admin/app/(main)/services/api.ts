@@ -97,6 +97,6 @@ export const editFeature = async (id: number | string, data: Partial<ServiceFeat
   const res = await axios.put(`${API_BASE}/dm-feature-services/${id}`, payload);
   return res.data;
 };
-export const deleteFeature = async (id: number): Promise<void> => {
+export const deleteFeature = async (id: string): Promise<void> => {
   await axios.delete(`${API_BASE}/dm-feature-services/${id}`);
 }; 

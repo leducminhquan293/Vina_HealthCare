@@ -21,6 +21,9 @@ export class DMFeatureService {
   @Prop({ required: true })
   description_en: string;  
 
+  @Prop({ type: Boolean, default: true })
+  is_active: boolean;
+
 }
 
 export const DMFeatureServiceSchema = SchemaFactory.createForClass(DMFeatureService);

@@ -24,6 +24,7 @@ export interface ServicePrice {
 }
 
 export interface ServiceFeature {
+  _id?: string | number; // Thêm dòng này để hỗ trợ MongoDB _id
   feature_id: number;
   price_id: number;
   is_active: boolean;

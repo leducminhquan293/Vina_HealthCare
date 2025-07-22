@@ -63,13 +63,13 @@ const ServicesPage = () => {
     }
   };
 
-  // Lấy danh sách đặc điểm
+  // Lấy danh sách tính năng
   const fetchFeatures = async () => {
     try {
       const data = await getServiceFeatures();
       setFeatures(data);
     } catch (err) {
-      alert('Không thể tải danh sách đặc điểm!');
+      alert('Không thể tải danh sách tính năng!');
     }
   };
 
@@ -88,20 +88,28 @@ const ServicesPage = () => {
     setEditingService(service);
     setServiceDialogVisible(true);
   };
-  const handleDelete = async (service: Service) => {
-    if (window.confirm('Bạn có chắc muốn xóa dịch vụ này?')) {
-      setServiceLoading(true);
-      try {
-        const id = service._id || service.service_id;
-        await deleteService(id);
-        messagesRef.current?.show({ severity: 'success', summary: 'Thành công', detail: 'Xóa thành công!' });
-        fetchServices();
-      } catch (err) {
-        messagesRef.current?.show({ severity: 'error', summary: 'Lỗi', detail: 'Xóa thất bại!' });
-      } finally {
-        setServiceLoading(false);
-      }
-    }
+  const handleDelete = (service: Service) => {
+    confirmDialog({
+      message: 'Bạn có chắc muốn xóa dịch vụ này?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Xóa',
+      rejectLabel: 'Hủy',
+      acceptClassName: 'p-button-danger',
+      accept: async () => {
+        setServiceLoading(true);
+        try {
+          const id = service._id || service.service_id;
+          await deleteService(id);
+          messagesRef.current?.show({ severity: 'success', summary: 'Thành công', detail: 'Xóa thành công!' });
+          fetchServices();
+        } catch (err) {
+          messagesRef.current?.show({ severity: 'error', summary: 'Lỗi', detail: 'Xóa thất bại!' });
+        } finally {
+          setServiceLoading(false);
+        }
+      },
+    });
   };
   const handleDialogSubmit = async (data: Partial<Service>) => {
     setServiceLoading(true);
@@ -175,7 +183,7 @@ const ServicesPage = () => {
     }
   };
 
-  // CRUD Feature
+  // CRUD Tính năng
   const handleAddFeature = () => {
     setEditingFeature(null);
     setFeatureDialogVisible(true);
@@ -184,25 +192,35 @@ const ServicesPage = () => {
     setEditingFeature(feature);
     setFeatureDialogVisible(true);
   };
-  const handleDeleteFeature = async (feature: ServiceFeature) => {
-    if (window.confirm('Bạn có chắc muốn xóa đặc điểm này?')) {
-      setFeatureLoading(true);
-      try {
-        await deleteFeature(feature.feature_id);
-        messagesRef.current?.show({ severity: 'success', summary: 'Thành công', detail: 'Xóa thành công!' });
-        fetchFeatures();
-      } catch (err) {
-        messagesRef.current?.show({ severity: 'error', summary: 'Lỗi', detail: 'Xóa thất bại!' });
-      } finally {
-        setFeatureLoading(false);
-      }
-    }
+  const handleDeleteFeature = (feature: ServiceFeature) => {
+    confirmDialog({
+      message: 'Bạn có chắc muốn xóa tính năng này?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Xóa',
+      rejectLabel: 'Hủy',
+      acceptClassName: 'p-button-danger',
+      accept: async () => {
+        setFeatureLoading(true);
+        try {
+          const id = feature._id !== undefined ? feature._id : feature.feature_id;
+          await deleteFeature(String(id));
+          messagesRef.current?.show({ severity: 'success', summary: 'Thành công', detail: 'Xóa thành công!' });
+          fetchFeatures();
+        } catch (err) {
+          messagesRef.current?.show({ severity: 'error', summary: 'Lỗi', detail: 'Xóa thất bại!' });
+        } finally {
+          setFeatureLoading(false);
+        }
+      },
+    });
   };
   const handleDialogSubmitFeature = async (data: Partial<ServiceFeature>) => {
     setFeatureLoading(true);
     try {
       if (editingFeature) {
-        await editFeature(editingFeature.feature_id, data);
+        const id = String(editingFeature._id || editingFeature.feature_id);
+        await editFeature(id, data);
         messagesRef.current?.show({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật thành công!' });
       } else {
         await addFeature(data);
@@ -304,7 +322,7 @@ const ServicesPage = () => {
             services={services}
           />
         </TabPanel>
-        <TabPanel header="Đặc điểm">
+        <TabPanel header="Tính năng">
           <FeatureTable
             features={features}
             onAdd={handleAddFeature}
