@@ -12,6 +12,7 @@ import { ServicesModule } from './services/services.module';
   imports: [
     // MongooseModule.forRoot('mongodb://localhost:27017/Vina'),
     MongooseModule.forRoot('mongodb://10.170.215.79:80/Vina'),
+    MongooseModule.forRoot('mongodb+srv://leducminhquan293:<db_password>@vinahealthcare.d29qums.mongodb.net/'),
     // MongooseModule.forRoot('mongodb+srv://buithanhbinh0511:AShNvqlMPhhy3sxr@cluster0.nwywlfb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'),
     UsersModule,
     AuthModule,
