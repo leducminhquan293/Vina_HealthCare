@@ -10,6 +10,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Các phương thức HTTP được phép
     credentials: true, // Nếu cần gửi cookie hoặc header xác thực
   });
+
   await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateDMServiceDTO = void 0;
+class CreateDMServiceDTO {
+    name;
+    description;
+    name_en;
+    description_en;
+    icon;
+}
+exports.CreateDMServiceDTO = CreateDMServiceDTO;
+//# sourceMappingURL=create-dm-service.dto.js.map
