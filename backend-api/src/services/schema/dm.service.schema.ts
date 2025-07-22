@@ -17,10 +17,12 @@ export class DMService {
 
   @Prop({ required: true })
   name_en: string;
-  
+
   @Prop({ required: true })
   description_en: string;
 
+  @Prop({ required: true })
+  is_active: boolean;
 
 }
 
