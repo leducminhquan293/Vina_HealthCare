@@ -1,4 +1,5 @@
 import { IsString, IsEmail, IsInt, Min, IsEnum, IsArray, IsIn } from 'class-validator';
+import { Role } from '../schema/user.schema';
 
 export class SignUpDto {
     @IsString()

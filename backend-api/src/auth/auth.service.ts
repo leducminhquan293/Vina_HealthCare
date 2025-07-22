@@ -5,10 +5,14 @@ import { SignUpDto } from 'src/users/dto/sign-up.dto';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { Role, UserDocument } from 'src/users/schema/user.schema';
+import * as bcrypt from 'bcrypt';
+// import { Logger } from 'winston';
+// import { InjectLogger } from 'nest-winston';
 
 @Injectable()
 export class AuthService {
     constructor(
+        // @InjectLogger() private readonly logger: Logger,
         private usersService: UsersService,
         private jwtService: JwtService,
     ) { }
@@ -27,6 +31,7 @@ export class AuthService {
 
         const user = await this.usersService.create(createUserDto) as UserDocument;
         const payload = { sub: user._id, email: user.email, role: user.role };
+
         return {
             access_token: this.jwtService.sign(payload),
         };
@@ -42,6 +47,7 @@ export class AuthService {
         // you might need to implement a separate authentication mechanism
         // For now, we'll just check if the user exists
         const payload = { sub: user._id, email: user.email, role: user.role };
+
         return {
             access_token: this.jwtService.sign(payload),
         };

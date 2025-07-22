@@ -1,0 +1,32 @@
+{
+  "name": "medical",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "sass": "sass --watch public/assets/scss/main.scss public/assets/css/style.css"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "lightgallery": "^2.8.3",
+    "next": "15.3.2",
+    "react": "^19.0.0",
+    "react-apexcharts": "^1.7.0",
+    "react-bootstrap": "^2.10.10",
+    "react-countdown": "^2.3.6",
+    "react-countup": "^6.5.3",
+    "react-dom": "^19.0.0",
+    "react-select": "^5.10.1",
+    "swiper": "^11.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "sass": "^1.89.0",
+    "typescript": "^5"
+  }
+}
