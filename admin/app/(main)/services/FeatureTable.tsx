@@ -27,7 +27,7 @@ const FeatureTable: React.FC<FeatureTableProps> = ({ features, onAdd, onEdit, on
   return (
     <div className="card">
       <div className="flex justify-content-end mb-3">
-        <Button icon="pi pi-plus" className="p-button-outlined p-button-secondary" onClick={onAdd} />
+        <Button icon="pi pi-plus" label="Thêm mới" className="p-button-primary" onClick={onAdd} />
       </div>
       <DataTable value={features} responsiveLayout="scroll" rowGroupMode="subheader" groupRowsBy="price_id" rowGroupHeaderTemplate={rowGroupHeaderTemplate} sortMode="single" sortField="price_id" sortOrder={1} >
         <Column field="_id" header="ID" style={{ width: '60px' }} />

@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type DMPriceServiceDocument = DMPriceService & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class DMPriceService {
 
   @Prop({ required: true })

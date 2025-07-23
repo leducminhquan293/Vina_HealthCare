@@ -27,7 +27,7 @@ const renderActiveBadge = (rowData: any) => {
   return rowData.is_active ? (
     <Tag value="Active" severity="success" />
   ) : (
-    <Tag value="Inactive" severity="secondary" />
+    <Tag value="Inactive" severity="info" />
   );
 };
 
@@ -35,7 +35,7 @@ const ServiceTable: React.FC<ServiceTableProps> = ({ services, onAdd, onEdit, on
   return (
     <div className="card">
       <div className="flex justify-content-end mb-3">
-        <Button icon="pi pi-plus" className="p-button-outlined p-button-secondary" onClick={onAdd} />
+        <Button icon="pi pi-plus" label="Thêm mới" className="p-button-primary" onClick={onAdd} />
       </div>
       <DataTable value={services} responsiveLayout="scroll">
         <Column field="_id" header="ID" style={{ width: '60px' }} body={rowData => renderValue(rowData._id)} />

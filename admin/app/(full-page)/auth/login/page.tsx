@@ -8,14 +8,35 @@ import { Password } from 'primereact/password';
 import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
+import { useAuth } from '../../../context/AuthContext';
 
 const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [checked, setChecked] = useState(false);
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
     const { layoutConfig } = useContext(LayoutContext);
+    const { login } = useAuth();
 
     const router = useRouter();
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
+
+    const handleSignIn = async () => {
+        setError('');
+        try {
+            const res = await fetch('http://localhost:3001/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (!res.ok) throw new Error('Email hoặc mật khẩu không đúng');
+            const data = await res.json();
+            login(data.user, data.access_token);
+            router.push('/');
+        } catch (err: any) {
+            setError(err.message || 'Đăng nhập thất bại');
+        }
+    };
 
     return (
         <div className={containerClassName}>
@@ -39,7 +60,7 @@ const LoginPage = () => {
                             <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
                                 Email
                             </label>
-                            <InputText id="email1" type="text" placeholder="Email address" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
+                            <InputText id="email1" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
 
                             <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
                                 Password
@@ -55,7 +76,8 @@ const LoginPage = () => {
                                     Forgot password?
                                 </a>
                             </div>
-                            <Button label="Sign In" className="w-full p-3 text-xl" onClick={() => router.push('/')}></Button>
+                            <Button label="Sign In" className="w-full p-3 text-xl" onClick={handleSignIn}></Button>
+                            {error && <div className="p-error mt-3 text-center">{error}</div>}
                         </div>
                     </div>
                 </div>

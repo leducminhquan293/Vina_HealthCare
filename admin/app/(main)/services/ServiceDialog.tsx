@@ -24,6 +24,7 @@ const initialState = {
 
 const ServiceDialog: React.FC<ServiceDialogProps> = ({ visible, onHide, onSubmit, service, loading }) => {
   const [form, setForm] = useState<Partial<Service>>(initialState);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     if (service) setForm(service);
@@ -35,6 +36,19 @@ const ServiceDialog: React.FC<ServiceDialogProps> = ({ visible, onHide, onSubmit
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!form.name) newErrors.name = "Tên dịch vụ (VI) là bắt buộc";
+    if (!form.name_en) newErrors.name_en = "Tên dịch vụ (EN) là bắt buộc";
+    return newErrors;
+  };
+  const handleSubmit = () => {
+    const newErrors = validate();
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+    onSubmit(form);
+  };
+
   return (
     <Dialog header={service ? 'Cập nhật dịch vụ' : 'Thêm dịch vụ mới'} visible={visible} style={{ width: '500px' }} onHide={onHide} modal>
       <div className="p-fluid">
@@ -43,16 +57,18 @@ const ServiceDialog: React.FC<ServiceDialogProps> = ({ visible, onHide, onSubmit
           <InputText id="icon" name="icon" value={form.icon || ''} onChange={handleChange} placeholder="fa-stethoscope, icon-house..." />
         </div>
         <div className="field">
-          <label htmlFor="name">Tên dịch vụ (VI)</label>
-          <InputText id="name" name="name" value={form.name || ''} onChange={handleChange} />
+          <label htmlFor="name">Tên dịch vụ (VI) <span style={{color: 'red'}}>*</span></label>
+          <InputText id="name" name="name" value={form.name || ''} onChange={handleChange} className={errors.name ? 'p-invalid' : ''} />
+          {errors.name && <small className="p-error">{errors.name}</small>}
         </div>
         <div className="field">
           <label htmlFor="description">Mô tả (VI)</label>
           <InputText id="description" name="description" value={form.description || ''} onChange={handleChange} />
         </div>
         <div className="field">
-          <label htmlFor="name_en">Tên dịch vụ (EN)</label>
-          <InputText id="name_en" name="name_en" value={form.name_en || ''} onChange={handleChange} />
+          <label htmlFor="name_en">Tên dịch vụ (EN) <span style={{color: 'red'}}>*</span></label>
+          <InputText id="name_en" name="name_en" value={form.name_en || ''} onChange={handleChange} className={errors.name_en ? 'p-invalid' : ''} />
+          {errors.name_en && <small className="p-error">{errors.name_en}</small>}
         </div>
         <div className="field">
           <label htmlFor="description_en">Mô tả (EN)</label>
@@ -65,7 +81,7 @@ const ServiceDialog: React.FC<ServiceDialogProps> = ({ visible, onHide, onSubmit
       </div>
       <div className="flex justify-content-end gap-2 mt-4">
         <Button type="button" label="Hủy" className="p-button-outlined" onClick={onHide} disabled={loading} />
-        <Button type="button" label={service ? 'Cập nhật' : 'Thêm mới'} className="p-button-primary" onClick={() => onSubmit(form)} loading={loading} />
+        <Button type="button" label={service ? 'Cập nhật' : 'Thêm mới'} className="p-button-primary" onClick={handleSubmit} loading={loading} />
       </div>
     </Dialog>
   );

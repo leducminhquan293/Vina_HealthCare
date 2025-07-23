@@ -24,6 +24,7 @@ const initialState = {
 
 const PriceDialog: React.FC<PriceDialogProps> = ({ visible, onHide, onSubmit, price, loading, services }) => {
   const [form, setForm] = useState<any>(initialState);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     if (price) setForm(price);
@@ -35,16 +36,31 @@ const PriceDialog: React.FC<PriceDialogProps> = ({ visible, onHide, onSubmit, pr
     setForm((prev: any) => ({ ...prev, [name]: value }));
   };
 
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!form.service_id) newErrors.service_id = "Dịch vụ là bắt buộc";
+    if (!form.price) newErrors.price = "Giá là bắt buộc";
+    return newErrors;
+  };
+  const handleSubmit = () => {
+    const newErrors = validate();
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+    onSubmit(form);
+  };
+
   return (
     <Dialog header={price ? 'Cập nhật giá dịch vụ' : 'Thêm giá dịch vụ'} visible={visible} style={{ width: '400px' }} onHide={onHide} modal>
       <div className="p-fluid">
         <div className="field">
-          <label htmlFor="service_id">Dịch vụ</label>
-          <Dropdown id="service_id" name="service_id" value={form.service_id} options={services.map(s => ({ label: s.name, value: s._id }))} onChange={e => setForm((prev: any) => ({ ...prev, service_id: e.value }))} placeholder="Chọn dịch vụ" />
+          <label htmlFor="service_id">Dịch vụ <span style={{color: 'red'}}>*</span></label>
+          <Dropdown id="service_id" name="service_id" value={form.service_id} options={services.map(s => ({ label: s.name, value: s._id }))} onChange={e => setForm((prev: any) => ({ ...prev, service_id: e.value }))} placeholder="Chọn dịch vụ" className={errors.service_id ? 'p-invalid' : ''} />
+          {errors.service_id && <small className="p-error">{errors.service_id}</small>}
         </div>
         <div className="field">
-          <label htmlFor="price">Giá</label>
-          <InputText id="price" name="price" value={form.price} onChange={handleChange} keyfilter="money" />
+          <label htmlFor="price">Giá <span style={{color: 'red'}}>*</span></label>
+          <InputText id="price" name="price" value={form.price} onChange={handleChange} keyfilter="money" className={errors.price ? 'p-invalid' : ''} />
+          {errors.price && <small className="p-error">{errors.price}</small>}
         </div>
         <div className="field">
           <label htmlFor="description">Mô tả (VI)</label>
@@ -65,7 +81,7 @@ const PriceDialog: React.FC<PriceDialogProps> = ({ visible, onHide, onSubmit, pr
       </div>
       <div className="flex justify-content-end gap-2 mt-4">
         <Button type="button" label="Hủy" className="p-button-outlined" onClick={onHide} disabled={loading} />
-        <Button type="button" label={price ? 'Cập nhật' : 'Thêm mới'} className="p-button-primary" onClick={() => onSubmit(form)} loading={loading} />
+        <Button type="button" label={price ? 'Cập nhật' : 'Thêm mới'} className="p-button-primary" onClick={handleSubmit} loading={loading} />
       </div>
     </Dialog>
   );

@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type DMFeatureServiceDocument = DMFeatureService & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class DMFeatureService {
 
   @Prop({ required: true })

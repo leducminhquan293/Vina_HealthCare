@@ -36,7 +36,7 @@ const PriceTable: React.FC<PriceTableProps> = ({ prices, onAdd, onEdit, onDelete
   return (
     <div className="card">
       <div className="flex justify-content-end mb-3">
-        <Button icon="pi pi-plus" className="p-button-outlined p-button-secondary" onClick={onAdd} />
+        <Button icon="pi pi-plus" label="Thêm mới" className="p-button-primary" onClick={onAdd} />
       </div>
       <DataTable value={prices} responsiveLayout="scroll" rowGroupMode="subheader" groupRowsBy="service_id" rowGroupHeaderTemplate={rowGroupHeaderTemplate} sortMode="single" sortField="service_id" sortOrder={1} >
         <Column field="_id" header="ID" style={{ width: '180px' }} />
