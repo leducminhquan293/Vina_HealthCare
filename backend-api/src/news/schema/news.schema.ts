@@ -13,6 +13,9 @@ export enum NewsStatus {
 export class News {
   // Đã loại bỏ news_id, chỉ dùng _id mặc định
 
+  @Prop({ type: Buffer, required: false })
+  image?: Buffer;
+
   @Prop({ type: String, maxlength: 255 })
   image_url: string;
 

@@ -11,6 +11,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputTextarea } from "primereact/inputtextarea";
 import type { ToastMessage } from "primereact/toast";
 import { Calendar } from "primereact/calendar";
+import { FileUpload } from "primereact/fileupload";
 
 interface NewsItem {
   _id?: string;
@@ -18,7 +19,7 @@ interface NewsItem {
   content: string;
   title_en: string;
   content_en: string;
-  image_url: string;
+  image?: string; // base64 string for preview
   status: string;
   publish_date: string;
 }
@@ -40,12 +41,13 @@ export default function NewsPage() {
     content: "",
     title_en: "",
     content_en: "",
-    image_url: "",
     status: "Draft",
     publish_date: "",
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const toast = useRef<Toast | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
   const API_URL = "http://localhost:3001/news";
 
@@ -58,9 +60,12 @@ export default function NewsPage() {
     try {
       const res = await fetch(API_URL);
       const data = await res.json();
-      console.log("API data:", data);
-      // Đảm bảo luôn truyền array vào setNews
-      setNews(Array.isArray(data) ? data : data.data || []);
+      setNews(
+        (Array.isArray(data) ? data : data.data || []).map((item: any) => ({
+          ...item,
+          image: item.image ? `data:image/jpeg;base64,${Buffer.from(item.image.data).toString("base64")}` : undefined,
+        }))
+      );
     } catch (e) {
       showToast("error", "Lỗi", "Không thể tải danh sách tin tức");
       setNews([]);
@@ -78,16 +83,19 @@ export default function NewsPage() {
       content: "",
       title_en: "",
       content_en: "",
-      image_url: "",
       status: "Draft",
       publish_date: "",
     });
+    setImageFile(null);
+    setImagePreview(undefined);
     setIsEdit(false);
     setDialogVisible(true);
   };
 
   const openEdit = (rowData: NewsItem) => {
     setForm(rowData);
+    setImagePreview(rowData.image);
+    setImageFile(null);
     setIsEdit(true);
     setDialogVisible(true);
   };
@@ -106,13 +114,20 @@ export default function NewsPage() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
     try {
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("content", form.content);
+      formData.append("title_en", form.title_en);
+      formData.append("content_en", form.content_en);
+      formData.append("status", form.status);
+      if (form.publish_date) formData.append("publish_date", form.publish_date);
+      if (!isEdit) formData.append("posted_by", "binhbt");
+      if (imageFile) formData.append("image", imageFile);
       const method = isEdit ? "PUT" : "POST";
       const url = isEdit ? `${API_URL}/${form._id}` : API_URL;
-      const payload = isEdit ? form : { ...form, posted_by: "binhbt" };
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: formData,
       });
       if (!res.ok) throw new Error("Lỗi khi lưu tin tức");
       showToast("success", "Thành công", isEdit ? "Cập nhật thành công" : "Thêm mới thành công");
@@ -141,6 +156,14 @@ export default function NewsPage() {
     });
   };
 
+  const onFileSelect = (e: any) => {
+    const file = e.files[0];
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev: any) => setImagePreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
   const dialogFooter = (
     <div>
       <Button label="Hủy" icon="pi pi-times" onClick={() => setDialogVisible(false)} className="p-button-text" />
@@ -156,6 +179,11 @@ export default function NewsPage() {
       <Toast ref={toast} />
       <ConfirmDialog />
       <DataTable value={news} loading={loading} paginator rows={10} selectionMode="single" onRowSelect={e => openEdit(e.data as NewsItem)}>
+        <Column
+          field="image"
+          header="Hình ảnh"
+          body={(rowData: NewsItem) => rowData.image ? <img src={rowData.image} alt="news" style={{ width: 80, height: 40, objectFit: 'cover' }} /> : null}
+        />
         <Column field="title" header="Tiêu đề" sortable />
         <Column field="title_en" header="Title (EN)" sortable />
         <Column field="status" header="Trạng thái" sortable />
@@ -173,6 +201,11 @@ export default function NewsPage() {
       </DataTable>
       <Dialog header={isEdit ? "Cập nhật tin tức" : "Thêm tin tức"} visible={dialogVisible} style={{ width: "40vw" }} footer={dialogFooter} onHide={() => setDialogVisible(false)}>
         <div className="p-fluid grid">
+          <div className="field col-12">
+            <label>Hình ảnh</label>
+            <FileUpload mode="basic" accept="image/*" maxFileSize={2000000} customUpload uploadHandler={onFileSelect} auto chooseLabel="Chọn ảnh" />
+            {imagePreview && <img src={imagePreview} alt="preview" style={{ width: 120, height: 60, objectFit: 'cover', marginTop: 8 }} />}
+          </div>
           <div className="field col-12">
             <label>Tiêu đề <span style={{color: 'red'}}>*</span></label>
             <InputText value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required className={errors.title ? 'p-invalid' : ''} />
@@ -192,10 +225,6 @@ export default function NewsPage() {
             <label>Nội dung (EN) <span style={{color: 'red'}}>*</span></label>
             <InputTextarea value={form.content_en} onChange={e => setForm({ ...form, content_en: e.target.value })} rows={3} required className={errors.content_en ? 'p-invalid' : ''} />
             {errors.content_en && <small className="p-error">{errors.content_en}</small>}
-          </div>
-          <div className="field col-12">
-            <label>Link ảnh</label>
-            <InputText value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} />
           </div>
           <div className="field col-6">
             <label>Trạng thái</label>
