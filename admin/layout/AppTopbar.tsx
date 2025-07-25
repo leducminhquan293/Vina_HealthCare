@@ -5,12 +5,36 @@ import { classNames } from 'primereact/utils';
 import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
+import { useAuth } from '../app/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { Menu } from 'primereact/menu';
+import type { Menu as MenuType } from 'primereact/menu';
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
+    const { logout, user } = useAuth();
+    const router = useRouter();
+    const menuRef = useRef<MenuType>(null);
+    const handleLogout = () => {
+        logout();
+        router.push('/auth/login');
+    };
+    const menuItems = [
+        {
+            label: user?.name || user?.email,
+            icon: 'pi pi-user',
+            disabled: true
+        },
+        { separator: true },
+        {
+            label: 'Đăng xuất',
+            icon: 'pi pi-sign-out',
+            command: handleLogout
+        }
+    ];
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
@@ -42,12 +66,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     <i className="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
-                <Link href="/documentation">
-                    <button type="button" className="p-link layout-topbar-button">
-                        <i className="pi pi-cog"></i>
-                        <span>Settings</span>
-                    </button>
-                </Link>
+                <button type="button" className="p-link layout-topbar-button" onClick={e => menuRef.current && menuRef.current.toggle(e)} title={user?.name || user?.email}>
+                    <i className="pi pi-cog"></i>
+                    <span style={{ marginLeft: 8 }}>{user?.name || user?.email}</span>
+                </button>
             </div>
         </div>
     );

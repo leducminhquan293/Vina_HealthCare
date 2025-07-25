@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type DMServiceDocument = DMService & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class DMService {
 
   @Prop({ required: true })
@@ -17,10 +17,12 @@ export class DMService {
 
   @Prop({ required: true })
   name_en: string;
-  
+
   @Prop({ required: true })
   description_en: string;
 
+  @Prop({ required: true })
+  is_active: boolean;
 
 }
 
