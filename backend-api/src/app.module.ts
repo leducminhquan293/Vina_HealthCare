@@ -10,6 +10,10 @@ import { NewsModule } from './news/news.module';
 import { FAQModule } from './faq/faq.module';
 import { ImageSliderModule } from './image-slider/image-slider.module';
 import { ExpertShareModule } from './expert-share/expert-share.module';
+import { TrustedMedicalModule } from './trusted-medical/trusted-medical.module';
+import { FacilitiesModule } from './facilities/facilities.module';
+import { HomepageSectionsModule } from './homepage-sections/homepage-sections.module';
+import { ContactMessagesModule } from './contact-messages/contact-messages.module';
 
 
 @Module({
@@ -25,7 +29,11 @@ import { ExpertShareModule } from './expert-share/expert-share.module';
     NewsModule,
     FAQModule,
     ImageSliderModule,
-    ExpertShareModule
+    ExpertShareModule,
+    TrustedMedicalModule,
+    FacilitiesModule,
+    HomepageSectionsModule,
+    ContactMessagesModule
   ],
   controllers: [AppController],
   providers: [AppService],
