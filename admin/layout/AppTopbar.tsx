@@ -70,6 +70,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     <i className="pi pi-cog"></i>
                     <span style={{ marginLeft: 8 }}>{user?.name || user?.email}</span>
                 </button>
+                {/* Nút logout luôn hiển thị góc phải */}
+                <button type="button" className="p-link layout-topbar-button p-button-danger" onClick={handleLogout} title="Đăng xuất" style={{marginLeft: 8, color: '#f44336'}}>
+                    <i className="pi pi-sign-out" style={{marginRight: 4}}></i>
+                    <span>Đăng xuất</span>
+                </button>
             </div>
         </div>
     );
