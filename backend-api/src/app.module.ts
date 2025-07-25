@@ -18,8 +18,8 @@ import { ContactMessagesModule } from './contact-messages/contact-messages.modul
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb://localhost:27017/Vina'),
-    MongooseModule.forRoot('mongodb://10.170.215.79:80/Vina'),
+    MongooseModule.forRoot('mongodb://localhost:27017/Vina'),
+    // MongooseModule.forRoot('mongodb://10.170.215.79:80/Vina'),
     // MongooseModule.forRoot('mongodb+srv://leducminhquan293:leducminhquan293@vinahealthcare.d29qums.mongodb.net/'),
     // MongooseModule.forRoot('mongodb+srv://buithanhbinh0511:AShNvqlMPhhy3sxr@cluster0.nwywlfb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'),
     UsersModule,

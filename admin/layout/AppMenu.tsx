@@ -28,61 +28,11 @@ const AppMenu = () => {
                 { label: 'Tin tức', icon: 'pi pi-fw pi-book', to: '/news' },
                 { label: 'Câu hỏi', icon: 'pi pi-fw pi-book', to: '/faqs' },
                 { label: 'Image slide', icon: 'pi pi-fw pi-book', to: '/image-slider' },
+                { label: 'Homepage sections', icon: 'pi pi-fw pi-book', to: '/homepage-sections' },
+                { label: 'Facilities', icon: 'pi pi-fw pi-book', to: '/facilities' },
+                { label: 'Trust medical', icon: 'pi pi-fw pi-book', to: '/trusted-medical' },
                 { label: 'Expert Shares', icon: 'pi pi-fw pi-users', to: '/expert-shares' }
             ],
-        },
-        {
-            label: 'Pages',
-            icon: 'pi pi-fw pi-briefcase',
-            to: '/pages',
-            items: [
-                {
-                    label: 'Landing',
-                    icon: 'pi pi-fw pi-globe',
-                    to: '/landing'
-                },
-                {
-                    label: 'Auth',
-                    icon: 'pi pi-fw pi-user',
-                    items: [
-                        {
-                            label: 'Login',
-                            icon: 'pi pi-fw pi-sign-in',
-                            to: '/auth/login'
-                        },
-                        {
-                            label: 'Error',
-                            icon: 'pi pi-fw pi-times-circle',
-                            to: '/auth/error'
-                        },
-                        {
-                            label: 'Access Denied',
-                            icon: 'pi pi-fw pi-lock',
-                            to: '/auth/access'
-                        }
-                    ]
-                },
-                {
-                    label: 'Crud',
-                    icon: 'pi pi-fw pi-pencil',
-                    to: '/pages/crud'
-                },
-                {
-                    label: 'Timeline',
-                    icon: 'pi pi-fw pi-calendar',
-                    to: '/pages/timeline'
-                },
-                {
-                    label: 'Not Found',
-                    icon: 'pi pi-fw pi-exclamation-circle',
-                    to: '/pages/notfound'
-                },
-                {
-                    label: 'Empty',
-                    icon: 'pi pi-fw pi-circle-off',
-                    to: '/pages/empty'
-                }
-            ]
         }
     ];
 
@@ -93,15 +43,15 @@ const AppMenu = () => {
                     return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
                 })}
 
-                <Link href="https://blocks.primereact.org" target="_blank" style={{ cursor: 'pointer' }}>
+                {/* <Link href="https://blocks.primereact.org" target="_blank" style={{ cursor: 'pointer' }}>
                     <img alt="Prime Blocks" className="w-full mt-3" src={`/layout/images/banner-primeblocks${layoutConfig.colorScheme === 'light' ? '' : '-dark'}.png`} />
-                </Link>
+                </Link> */}
             </ul>
-            <div className="p-3">
+            {/* <div className="p-3">
                 <button className="p-button p-button-danger w-full" onClick={handleLogout}>
                     <i className="pi pi-sign-out mr-2" /> Đăng xuất
                 </button>
-            </div>
+            </div> */}
         </MenuProvider>
     );
 };

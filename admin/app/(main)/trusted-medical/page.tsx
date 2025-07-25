@@ -53,9 +53,10 @@ export default function TrustedMedicalPage() {
     try {
       const res = await fetch(API_URL);
       const d = await res.json();
-      setData((Array.isArray(d) ? d : d.data || []).map((item: any) => ({
+      debugger
+      setData((Array.isArray(d) ? d : d.data || []).map((item:any) => ({
         ...item,
-        logo_data: item.logo_data ? (item.logo_data.startsWith('data:') ? item.logo_data : `data:image/jpeg;base64,${item.logo_data}`) : undefined,
+        logo_data: item.logo_data ? `data:image/jpeg;base64,${Buffer.from(item.logo_data.data).toString("base64")}` : undefined,
       })));
     } catch {
       showToast("error", "Lỗi", "Không thể tải danh sách thương hiệu");
@@ -63,7 +64,7 @@ export default function TrustedMedicalPage() {
     }
     setLoading(false);
   };
-
+  
   const showToast = (severity: any, summary: string, detail: string) => {
     toast.current?.show?.({ severity, summary, detail, life: 3000 });
   };
