@@ -27,7 +27,8 @@ const AppMenu = () => {
                 { label: 'Dịch vụ', icon: 'pi pi-fw pi-home', to: '/services' },
                 { label: 'Tin tức', icon: 'pi pi-fw pi-book', to: '/news' },
                 { label: 'Câu hỏi', icon: 'pi pi-fw pi-book', to: '/faqs' },
-                { label: 'Image slide', icon: 'pi pi-fw pi-book', to: '/image-slider' }
+                { label: 'Image slide', icon: 'pi pi-fw pi-book', to: '/image-slider' },
+                { label: 'Expert Shares', icon: 'pi pi-fw pi-users', to: '/expert-shares' }
             ],
         },
         {

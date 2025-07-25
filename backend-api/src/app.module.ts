@@ -9,6 +9,7 @@ import { ServicesModule } from './services/services.module';
 import { NewsModule } from './news/news.module';
 import { FAQModule } from './faq/faq.module';
 import { ImageSliderModule } from './image-slider/image-slider.module';
+import { ExpertShareModule } from './expert-share/expert-share.module';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { ImageSliderModule } from './image-slider/image-slider.module';
     ServicesModule,
     NewsModule,
     FAQModule,
-    ImageSliderModule
+    ImageSliderModule,
+    ExpertShareModule
   ],
   controllers: [AppController],
   providers: [AppService],
