@@ -2,9 +2,7 @@ import { IsString, IsOptional, IsEnum, IsDateString } from 'class-validator';
 import { NewsStatus } from '../schema/news.schema';
 
 export class UpdateNewsDto {
-  @IsOptional()
-  @IsString()
-  image_url?: string;
+  image?: any; // Buffer hoặc file upload
 
   @IsOptional()
   @IsString()

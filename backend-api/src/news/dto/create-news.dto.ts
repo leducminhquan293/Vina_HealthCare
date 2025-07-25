@@ -2,9 +2,7 @@ import { IsString, IsNotEmpty, IsOptional, IsEnum, IsDateString } from 'class-va
 import { NewsStatus } from '../schema/news.schema';
 
 export class CreateNewsDto {
-  @IsOptional()
-  @IsString()
-  image_url?: string;
+  image?: any; // Buffer hoặc file upload
 
   @IsString()
   @IsNotEmpty()
