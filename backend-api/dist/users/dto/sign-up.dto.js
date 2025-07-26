@@ -11,16 +11,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpDto = void 0;
 const class_validator_1 = require("class-validator");
+const user_schema_1 = require("../schema/user.schema");
+const create_user_dto_1 = require("./create-user.dto");
 class SignUpDto {
     name;
     email;
     password;
-    age;
-    roles;
+    date_of_birth;
+    gender;
+    phone;
+    address;
+    avatar;
+    type;
+    role;
 }
 exports.SignUpDto = SignUpDto;
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], SignUpDto.prototype, "name", void 0);
 __decorate([
@@ -29,16 +37,44 @@ __decorate([
 ], SignUpDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], SignUpDto.prototype, "password", void 0);
 __decorate([
-    (0, class_validator_1.IsInt)(),
-    (0, class_validator_1.Min)(1),
-    __metadata("design:type", Number)
-], SignUpDto.prototype, "age", void 0);
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "date_of_birth", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)({ message: 'Role phải là một mảng' }),
-    (0, class_validator_1.IsIn)(['admin', 'staff', 'user'], { each: true, message: 'Mỗi role phải là admin, staff hoặc user' }),
-    __metadata("design:type", Array)
-], SignUpDto.prototype, "roles", void 0);
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(user_schema_1.Gender),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "gender", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(20),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "phone", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(255),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "avatar", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(user_schema_1.UserType),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "type", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(create_user_dto_1.Role),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "role", void 0);
 //# sourceMappingURL=sign-up.dto.js.map

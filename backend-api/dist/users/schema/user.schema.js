@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserSchema = exports.User = exports.Role = exports.Gender = void 0;
+exports.UserSchema = exports.User = exports.Role = exports.UserType = exports.Gender = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 var Gender;
 (function (Gender) {
@@ -17,6 +17,11 @@ var Gender;
     Gender["FEMALE"] = "Female";
     Gender["OTHER"] = "Other";
 })(Gender || (exports.Gender = Gender = {}));
+var UserType;
+(function (UserType) {
+    UserType["NORMAL"] = "normal";
+    UserType["VIP"] = "vip";
+})(UserType || (exports.UserType = UserType = {}));
 var Role;
 (function (Role) {
     Role["PATIENT"] = "Patient";
@@ -24,16 +29,23 @@ var Role;
     Role["NURSE"] = "Nurse";
 })(Role || (exports.Role = Role = {}));
 let User = class User {
+    user_id;
     full_name;
     date_of_birth;
     gender;
     phone;
     email;
     address;
+    avatar;
+    type;
     role;
     created_at;
 };
 exports.User = User;
+__decorate([
+    (0, mongoose_1.Prop)({ unique: true }),
+    __metadata("design:type", Number)
+], User.prototype, "user_id", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, maxlength: 100 }),
     __metadata("design:type", String)
@@ -51,13 +63,21 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ maxlength: 100, unique: true }),
+    (0, mongoose_1.Prop)({ maxlength: 100 }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ maxlength: 255 }),
     __metadata("design:type", String)
 ], User.prototype, "address", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], User.prototype, "avatar", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ enum: UserType, default: UserType.NORMAL }),
+    __metadata("design:type", String)
+], User.prototype, "type", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, enum: Role }),
     __metadata("design:type", String)
@@ -71,4 +91,12 @@ exports.User = User = __decorate([
 ], User);
 exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
 exports.UserSchema.index({ email: 1 }, { name: 'idx_user_email' });
+exports.UserSchema.pre('save', async function (next) {
+    if (this.isNew) {
+        const UserModel = this.constructor;
+        const lastUser = await UserModel.findOne({}, {}, { sort: { 'user_id': -1 } });
+        this.user_id = lastUser ? lastUser.user_id + 1 : 1;
+    }
+    next();
+});
 //# sourceMappingURL=user.schema.js.map

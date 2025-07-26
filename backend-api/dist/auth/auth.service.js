@@ -13,7 +13,7 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const users_service_1 = require("../users/users.service");
-const user_schema_1 = require("../users/schema/user.schema");
+const create_user_dto_1 = require("../users/dto/create-user.dto");
 let AuthService = class AuthService {
     usersService;
     jwtService;
@@ -25,16 +25,24 @@ let AuthService = class AuthService {
         const createUserDto = {
             full_name: signUpDto.name,
             email: signUpDto.email,
-            role: user_schema_1.Role.PATIENT,
-            date_of_birth: undefined,
-            gender: undefined,
-            phone: undefined,
-            address: undefined
+            date_of_birth: signUpDto.date_of_birth,
+            gender: signUpDto.gender,
+            phone: signUpDto.phone,
+            address: signUpDto.address,
+            avatar: signUpDto.avatar,
+            type: signUpDto.type,
+            role: signUpDto.role || create_user_dto_1.Role.PATIENT
         };
         const user = await this.usersService.create(createUserDto);
-        const payload = { sub: user._id, email: user.email, role: user.role };
+        const payload = { sub: user.user_id, email: user.email, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
+            user: {
+                email: user.email,
+                role: user.role,
+                full_name: user.full_name,
+                user_id: user.user_id
+            }
         };
     }
     async signIn(signInDto) {
@@ -42,9 +50,15 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.UnauthorizedException('Email hoặc mật khẩu không đúng');
         }
-        const payload = { sub: user._id, email: user.email, role: user.role };
+        const payload = { sub: user.user_id, email: user.email, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
+            user: {
+                email: user.email,
+                role: user.role,
+                full_name: user.full_name,
+                user_id: user.user_id
+            }
         };
     }
 };

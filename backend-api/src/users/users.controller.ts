@@ -13,7 +13,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Role } from './schema/user.schema';
+import { UserType } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -26,47 +26,62 @@ export class UsersController {
     }
 
     @Get()
-    async findAll(@Query('role') role?: string, @Query('search') search?: string) {
+    async findAll(@Query('type') type?: string, @Query('search') search?: string) {
         if (search) {
             return this.usersService.searchUsers(search);
         }
-        if (role) {
-            return this.usersService.findByRole(role);
+        if (type) {
+            return this.usersService.findByType(type);
         }
         return this.usersService.findAll();
     }
 
     @Get('count')
-    async countByRole(@Query('role') role: string) {
-        return { count: await this.usersService.countByRole(role) };
+    async countByType(@Query('type') type: string) {
+        return { count: await this.usersService.countByType(type) };
     }
 
-    @Get('roles')
-    async getRoles() {
+    @Get('types')
+    async getTypes() {
         return {
-            roles: Object.values(Role),
+            types: Object.values(UserType),
             description: {
-                [Role.PATIENT]: 'Bệnh nhân',
-                [Role.DOCTOR]: 'Bác sĩ',
-                [Role.NURSE]: 'Y tá'
+                [UserType.NORMAL]: 'Người dùng thường',
+                [UserType.VIP]: 'Người dùng VIP'
             }
         };
     }
 
     @Get(':id')
     async findOne(@Param('id') id: string) {
+        // Kiểm tra xem id có phải là số không (user_id) hay string (_id)
+        const userId = parseInt(id);
+        if (!isNaN(userId)) {
+            return this.usersService.findByUserId(userId);
+        }
         return this.usersService.findOne(id);
     }
 
     @Put(':id')
     async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+        // Kiểm tra xem id có phải là số không (user_id) hay string (_id)
+        const userId = parseInt(id);
+        if (!isNaN(userId)) {
+            return this.usersService.updateByUserId(userId, updateUserDto);
+        }
         return this.usersService.update(id, updateUserDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async remove(@Param('id') id: string) {
-        await this.usersService.remove(id);
+        // Kiểm tra xem id có phải là số không (user_id) hay string (_id)
+        const userId = parseInt(id);
+        if (!isNaN(userId)) {
+            await this.usersService.removeByUserId(userId);
+        } else {
+            await this.usersService.remove(id);
+        }
         return { message: 'Xóa người dùng thành công' };
     }
 } 

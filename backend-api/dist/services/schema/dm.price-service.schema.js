@@ -40,7 +40,7 @@ __decorate([
     __metadata("design:type", Boolean)
 ], DMPriceService.prototype, "is_popular", void 0);
 exports.DMPriceService = DMPriceService = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 ], DMPriceService);
 exports.DMPriceServiceSchema = mongoose_1.SchemaFactory.createForClass(DMPriceService);
 //# sourceMappingURL=dm.price-service.schema.js.map

@@ -10,7 +10,7 @@ import { X, Check } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { MedicalStaffWithTranslations } from '../types/medical-staff';
 import { specializationOptions } from '../data/mockData';
-import type { User } from '../../user/types/user';
+import type { User } from '../../userNotUse/types/user';
 
 interface MedicalStaffFormProps {
   visible: boolean;

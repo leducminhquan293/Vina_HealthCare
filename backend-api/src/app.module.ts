@@ -22,7 +22,7 @@ import { ImageSliderModule } from './image-slider/image-slider.module';
     AuthModule,
     // LoggerModule,
     ServicesModule,
-    MedicalStaffModule
+    MedicalStaffModule,
     NewsModule,
     FAQModule,
     ImageSliderModule

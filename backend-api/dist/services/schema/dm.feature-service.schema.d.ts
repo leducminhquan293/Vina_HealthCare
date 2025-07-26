@@ -6,6 +6,7 @@ export declare class DMFeatureService {
     description: string;
     name_en: string;
     description_en: string;
+    is_active: boolean;
 }
 export declare const DMFeatureServiceSchema: import("mongoose").Schema<DMFeatureService, import("mongoose").Model<DMFeatureService, any, any, any, Document<unknown, any, DMFeatureService, any> & DMFeatureService & {
     _id: import("mongoose").Types.ObjectId;

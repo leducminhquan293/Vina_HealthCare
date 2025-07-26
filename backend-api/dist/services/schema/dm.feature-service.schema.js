@@ -17,6 +17,7 @@ let DMFeatureService = class DMFeatureService {
     description;
     name_en;
     description_en;
+    is_active;
 };
 exports.DMFeatureService = DMFeatureService;
 __decorate([
@@ -39,8 +40,12 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], DMFeatureService.prototype, "description_en", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Boolean, default: true }),
+    __metadata("design:type", Boolean)
+], DMFeatureService.prototype, "is_active", void 0);
 exports.DMFeatureService = DMFeatureService = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 ], DMFeatureService);
 exports.DMFeatureServiceSchema = mongoose_1.SchemaFactory.createForClass(DMFeatureService);
 //# sourceMappingURL=dm.feature-service.schema.js.map

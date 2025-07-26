@@ -7,6 +7,7 @@ class CreateDMServiceDTO {
     name_en;
     description_en;
     icon;
+    is_active;
 }
 exports.CreateDMServiceDTO = CreateDMServiceDTO;
 //# sourceMappingURL=create-dm-service.dto.js.map

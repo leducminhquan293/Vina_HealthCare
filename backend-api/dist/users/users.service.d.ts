@@ -7,11 +7,15 @@ export declare class UsersService {
     constructor(userModel: Model<UserDocument>);
     create(createUserDto: CreateUserDto): Promise<User>;
     findAll(): Promise<User[]>;
+    private ensureUserIds;
     findOne(id: string): Promise<User>;
+    findByUserId(userId: number): Promise<User>;
     findByEmail(email: string): Promise<User | null>;
-    findByRole(role: string): Promise<User[]>;
+    findByType(type: string): Promise<User[]>;
     update(id: string, updateUserDto: UpdateUserDto): Promise<User>;
+    updateByUserId(userId: number, updateUserDto: UpdateUserDto): Promise<User>;
     remove(id: string): Promise<User>;
-    countByRole(role: string): Promise<number>;
+    removeByUserId(userId: number): Promise<User>;
+    countByType(type: string): Promise<number>;
     searchUsers(query: string): Promise<User[]>;
 }

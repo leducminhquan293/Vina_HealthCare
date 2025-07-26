@@ -1,21 +1,20 @@
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Role } from './schema/user.schema';
+import { UserType } from './dto/create-user.dto';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
     create(createUserDto: CreateUserDto): Promise<import("./schema/user.schema").User>;
-    findAll(role?: string, search?: string): Promise<import("./schema/user.schema").User[]>;
-    countByRole(role: string): Promise<{
+    findAll(type?: string, search?: string): Promise<import("./schema/user.schema").User[]>;
+    countByType(type: string): Promise<{
         count: number;
     }>;
-    getRoles(): Promise<{
-        roles: Role[];
+    getTypes(): Promise<{
+        types: UserType[];
         description: {
-            Patient: string;
-            Doctor: string;
-            Nurse: string;
+            normal: string;
+            vip: string;
         };
     }>;
     findOne(id: string): Promise<import("./schema/user.schema").User>;

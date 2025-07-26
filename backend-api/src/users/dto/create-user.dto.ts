@@ -1,8 +1,20 @@
-import { IsString, IsEmail, IsOptional, IsEnum, IsDateString, MaxLength } from 'class-validator';
-import { Gender, Role } from '../schema/user.schema';
+import { IsString, IsEmail, IsOptional, IsEnum, IsDateString, MaxLength, IsNotEmpty } from 'class-validator';
+import { Gender } from '../schema/user.schema';
+
+export enum UserType {
+    NORMAL = 'normal',
+    VIP = 'vip'
+}
+
+export enum Role {
+    PATIENT = 'Patient',
+    DOCTOR = 'Doctor',
+    NURSE = 'Nurse'
+}
 
 export class CreateUserDto {
     @IsString()
+    @IsNotEmpty()
     @MaxLength(100)
     full_name: string;
 
@@ -19,14 +31,23 @@ export class CreateUserDto {
     @MaxLength(20)
     phone?: string;
 
+    @IsOptional()
     @IsEmail()
     @MaxLength(100)
-    email: string;
+    email?: string;
 
     @IsOptional()
     @IsString()
     @MaxLength(255)
     address?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    avatar: string;
+
+    @IsOptional()
+    @IsEnum(UserType)
+    type?: UserType;
 
     @IsEnum(Role)
     role: Role;

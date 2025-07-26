@@ -9,9 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserDto = void 0;
+exports.CreateUserDto = exports.Role = exports.UserType = void 0;
 const class_validator_1 = require("class-validator");
 const user_schema_1 = require("../schema/user.schema");
+var UserType;
+(function (UserType) {
+    UserType["NORMAL"] = "normal";
+    UserType["VIP"] = "vip";
+})(UserType || (exports.UserType = UserType = {}));
+var Role;
+(function (Role) {
+    Role["PATIENT"] = "Patient";
+    Role["DOCTOR"] = "Doctor";
+    Role["NURSE"] = "Nurse";
+})(Role || (exports.Role = Role = {}));
 class CreateUserDto {
     full_name;
     date_of_birth;
@@ -19,11 +30,14 @@ class CreateUserDto {
     phone;
     email;
     address;
+    avatar;
+    type;
     role;
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "full_name", void 0);
@@ -44,6 +58,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "phone", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
@@ -55,7 +70,17 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "address", void 0);
 __decorate([
-    (0, class_validator_1.IsEnum)(user_schema_1.Role),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "avatar", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(UserType),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "type", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(Role),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "role", void 0);
 //# sourceMappingURL=create-user.dto.js.map

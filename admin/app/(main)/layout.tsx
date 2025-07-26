@@ -13,9 +13,9 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
     const { user } = useAuth();
     const router = useRouter();
-    useEffect(() => {
-        if (!user) router.push('/auth/login');
-    }, [user]);
-    if (!user) return null;
+    // useEffect(() => {
+    //     if (!user) router.push('/auth/login');
+    // }, [user]);
+    // if (!user) return null;
     return <Layout>{children}</Layout>;
 }

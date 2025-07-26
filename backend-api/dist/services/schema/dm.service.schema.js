@@ -17,6 +17,7 @@ let DMService = class DMService {
     icon;
     name_en;
     description_en;
+    is_active;
 };
 exports.DMService = DMService;
 __decorate([
@@ -39,8 +40,12 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], DMService.prototype, "description_en", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", Boolean)
+], DMService.prototype, "is_active", void 0);
 exports.DMService = DMService = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 ], DMService);
 exports.DMServiceSchema = mongoose_1.SchemaFactory.createForClass(DMService);
 //# sourceMappingURL=dm.service.schema.js.map

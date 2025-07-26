@@ -1,1 +1,1 @@
-{"version":3,"file":"create-dm-service.dto.js","sourceRoot":"","sources":["../../../src/services/dto/create-dm-service.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,kBAAkB;IAC7B,IAAI,CAAS;IACb,WAAW,CAAS;IACpB,OAAO,CAAS;IAChB,cAAc,CAAS;IACvB,IAAI,CAAS;CACd;AAND,gDAMC"}
+{"version":3,"file":"create-dm-service.dto.js","sourceRoot":"","sources":["../../../src/services/dto/create-dm-service.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,kBAAkB;IAC7B,IAAI,CAAS;IACb,WAAW,CAAS;IACpB,OAAO,CAAS;IAChB,cAAc,CAAS;IACvB,IAAI,CAAS;IACb,SAAS,CAAU;CACpB;AAPD,gDAOC"}

@@ -1,0 +1,39 @@
+/* Custom styles for user-management page */
+
+.userManagementContainer {
+  padding: 1rem;
+}
+
+.avatarImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarPreview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.requiredField {
+  color: #dc3545;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.formLabel {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+} 

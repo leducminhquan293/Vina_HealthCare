@@ -15,6 +15,9 @@ const users_module_1 = require("./users/users.module");
 const auth_module_1 = require("./auth/auth.module");
 const services_module_1 = require("./services/services.module");
 const medical_staff_module_1 = require("./medical-staff/medical-staff.module");
+const news_module_1 = require("./news/news.module");
+const faq_module_1 = require("./faq/faq.module");
+const image_slider_module_1 = require("./image-slider/image-slider.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -25,7 +28,10 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             services_module_1.ServicesModule,
-            medical_staff_module_1.MedicalStaffModule
+            medical_staff_module_1.MedicalStaffModule,
+            news_module_1.NewsModule,
+            faq_module_1.FAQModule,
+            image_slider_module_1.ImageSliderModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

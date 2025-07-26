@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
-const user_schema_1 = require("./schema/user.schema");
+const create_user_dto_2 = require("./dto/create-user.dto");
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
@@ -26,36 +26,49 @@ let UsersController = class UsersController {
     async create(createUserDto) {
         return this.usersService.create(createUserDto);
     }
-    async findAll(role, search) {
+    async findAll(type, search) {
         if (search) {
             return this.usersService.searchUsers(search);
         }
-        if (role) {
-            return this.usersService.findByRole(role);
+        if (type) {
+            return this.usersService.findByType(type);
         }
         return this.usersService.findAll();
     }
-    async countByRole(role) {
-        return { count: await this.usersService.countByRole(role) };
+    async countByType(type) {
+        return { count: await this.usersService.countByType(type) };
     }
-    async getRoles() {
+    async getTypes() {
         return {
-            roles: Object.values(user_schema_1.Role),
+            types: Object.values(create_user_dto_2.UserType),
             description: {
-                [user_schema_1.Role.PATIENT]: 'Bệnh nhân',
-                [user_schema_1.Role.DOCTOR]: 'Bác sĩ',
-                [user_schema_1.Role.NURSE]: 'Y tá'
+                [create_user_dto_2.UserType.NORMAL]: 'Người dùng thường',
+                [create_user_dto_2.UserType.VIP]: 'Người dùng VIP'
             }
         };
     }
     async findOne(id) {
+        const userId = parseInt(id);
+        if (!isNaN(userId)) {
+            return this.usersService.findByUserId(userId);
+        }
         return this.usersService.findOne(id);
     }
     async update(id, updateUserDto) {
+        const userId = parseInt(id);
+        if (!isNaN(userId)) {
+            return this.usersService.updateByUserId(userId, updateUserDto);
+        }
         return this.usersService.update(id, updateUserDto);
     }
     async remove(id) {
-        await this.usersService.remove(id);
+        const userId = parseInt(id);
+        if (!isNaN(userId)) {
+            await this.usersService.removeByUserId(userId);
+        }
+        else {
+            await this.usersService.remove(id);
+        }
         return { message: 'Xóa người dùng thành công' };
     }
 };
@@ -70,7 +83,7 @@ __decorate([
 ], UsersController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('role')),
+    __param(0, (0, common_1.Query)('type')),
     __param(1, (0, common_1.Query)('search')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
@@ -78,17 +91,17 @@ __decorate([
 ], UsersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('count'),
-    __param(0, (0, common_1.Query)('role')),
+    __param(0, (0, common_1.Query)('type')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "countByRole", null);
+], UsersController.prototype, "countByType", null);
 __decorate([
-    (0, common_1.Get)('roles'),
+    (0, common_1.Get)('types'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getRoles", null);
+], UsersController.prototype, "getTypes", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

@@ -3,16 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from 'src/users/dto/sign-in.dto';
 import { SignUpDto } from 'src/users/dto/sign-up.dto';
 import { UsersService } from 'src/users/users.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { Role, UserDocument } from 'src/users/schema/user.schema';
-import * as bcrypt from 'bcrypt';
-// import { Logger } from 'winston';
-// import { InjectLogger } from 'nest-winston';
+import { CreateUserDto, Role } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
-        // @InjectLogger() private readonly logger: Logger,
         private usersService: UsersService,
         private jwtService: JwtService,
     ) { }
@@ -22,47 +17,41 @@ export class AuthService {
         const createUserDto: CreateUserDto = {
             full_name: signUpDto.name,
             email: signUpDto.email,
-            role: Role.PATIENT, // Default role for signup
-            date_of_birth: undefined,
-            gender: undefined,
-            phone: undefined,
-            address: undefined
+            date_of_birth: signUpDto.date_of_birth,
+            gender: signUpDto.gender,
+            phone: signUpDto.phone,
+            address: signUpDto.address,
+            avatar: signUpDto.avatar,
+            type: signUpDto.type,
+            role: signUpDto.role || Role.PATIENT
         };
-
-        const user = await this.usersService.create(createUserDto) as UserDocument;
-        const payload = { sub: user._id, email: user.email, role: user.role };
-
+        const user = await this.usersService.create(createUserDto);
+        const payload = { sub: user.user_id, email: user.email, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
             user: {
-                _id: user._id,
                 email: user.email,
-                roles: user.roles,
-                name: user.name,
-                age: user.age
+                role: user.role,
+                full_name: user.full_name,
+                user_id: user.user_id
             }
         };
     }
 
     async signIn(signInDto: SignInDto): Promise<any> {
-        const user = await this.usersService.findByEmail(signInDto.email) as UserDocument;
+        const user = await this.usersService.findByEmail(signInDto.email);
         if (!user) {
             throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
         }
-
-        // Note: Since the new user schema doesn't have password field,
-        // you might need to implement a separate authentication mechanism
-        // For now, we'll just check if the user exists
-        const payload = { sub: user._id, email: user.email, role: user.role };
-
+        // Note: Password comparison would need to be implemented if password field exists
+        const payload = { sub: user.user_id, email: user.email, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
             user: {
-                _id: user._id,
                 email: user.email,
-                roles: user.roles,
-                name: user.name,
-                age: user.age
+                role: user.role,
+                full_name: user.full_name,
+                user_id: user.user_id
             }
         };
     }

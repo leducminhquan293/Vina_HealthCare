@@ -4,4 +4,5 @@ export declare class CreateDMServiceDTO {
     name_en: string;
     description_en: string;
     icon: string;
+    is_active: boolean;
 }
